@@ -1,0 +1,70 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_goalsahead/dashboard
+    Resource selector results.
+    Example context (json):
+    {}
+}}
+
+<tr>
+    <td style="width: 5%;">
+        {{#has_associate_data}}
+        <a href="javascript:void(0);" data-target="#details_{{id}}" data-toggle="collapse" class="accordion-toggle" style="font-size: 20px; color: Gray;">
+            <i class="fa fa-plus-circle"></i>
+        </a>
+        {{/has_associate_data}}
+    </td>
+    <td style="text-align:left">
+        <div class="resource-name">{{title}}</div>
+    </td>
+    <td>
+        <div>
+            <div class="progress" style="border-radius: 4px; height: 1.52rem !important; background-color: #bfbfbf !important;" title="{{progress}}%">
+                <div class="progress-bar" role="progressbar" style="width: {{progress}}%;background-color:#00a505ab !important;" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100">
+                    {{progress}}%
+                </div>
+            </div>
+        </div>
+    </td>
+    <td style="width: 5%;">
+        {{^complete}}
+            <a href="javascript:void(0);" style="font-size: 20px; color: Gray;">
+                <i class="fa fa-check-square"></i>
+            </a>
+        {{/complete}}
+    </td>
+</tr>
+{{#has_associate_data}}
+<tr>
+    <td colspan="4" style="padding: 0 !important;">
+        <div class="accordian-body collapse" id="details_{{id}}" style="width:95%; margin: 0 2.5%;">
+                <table
+                class="table table-borderless"
+                style="width: 100%; margin: 0;">
+                <tbody>
+                    {{#associate_data}}
+                        {{#is_objective}}
+                            {{> block_goalsahead/dashboard_line_objective }}
+                        {{/is_objective}}
+                        {{#is_goal}}
+                            {{> block_goalsahead/dashboard_line_goal }}
+                        {{/is_goal}}
+                    {{/associate_data}}
+                </tbody>
+            </table>
+        </div> 
+    </td>
+</tr>
+{{/has_associate_data}}

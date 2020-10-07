@@ -24,88 +24,29 @@
     <div class="alert alert-warning searching-results" style="display: none">
         {{#str}}loadinghelp, core{{/str}}
     </div>-->
-    <h3>{{page_title}}</h3>
+    <h3>{{str.dashboardtitle}}</h3>
     <div style="display: block;float: right; margin: 5px;">
         <a href="javascript:void(0);" style="font-size: 20px; color: Gray;">
-            <i class="fa fa-cubes"></i> {{btn_objectives}}
+            <i class="fa fa-cubes"></i> {{str.objectives}}
         </a>
         <a href="javascript:void(0);" style="font-size: 20px; color: Gray;">
-            <i class="fa fa-cube"></i> {{btn_goals}}
+            <i class="fa fa-cube"></i> {{str.goals}}
         </a>
     </div>
+    <!-- Verify has data, else no data message -->
     <div style="display: block;">
         <table
             class="table"
             style="width: 100%; margin: 0;">
             <tbody>
-                {{#objectives}}
-                <tr>
-                    <td style="width: 5%;">
-                        <a href="javascript:void(0);" data-target="#details_{{count}}" data-toggle="collapse" class="accordion-toggle" style="font-size: 20px; color: Gray;">
-                            <i class="fa fa-plus-circle"></i>
-                        </a>
-                    </td>
-                    <td style="text-align:left">
-                        <div class="resource-name">{{title}}</div>
-                    </td>
-                    <td>
-                        <div>
-                            <div class="progress" style="border-radius: 4px; height: 1.52rem !important; background-color: #bfbfbf !important;" title="{{progress}}%">
-                                <div class="progress-bar" role="progressbar" style="width: {{progress}}%;background-color:#00a505ab !important;" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100">
-                                    {{progress}}%
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                    <td style="width: 5%;">
-                        {{^complete}}
-                            <a href="javascript:void(0);" style="font-size: 20px; color: Gray;">
-                                <i class="fa fa-check-square"></i>
-                            </a>
-                        {{/complete}}
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="4" style="padding: 0 !important;">
-                        <div class="accordian-body collapse" id="details_{{count}}" style="width:95%; margin: 0 2.5%;">
-                             <table
-                                class="table table-borderless"
-                                style="width: 100%; margin: 0;">
-                                <tbody>
-                                    {{#goals}}
-                                    <tr>
-                                        <td style="width: 5%;">
-                                            {{#complete}}
-                                                <span style="font-size: 20px; color: #00a505ab;">
-                                                    <i class="fa fa-check"></i>
-                                                </span>
-                                            {{/complete}}
-                                        </td>
-                                        <td style="text-align:left">
-                                            {{title}}
-                                        </td>
-                                        <td>
-                                            <div class="progress" style="border-radius: 4px; height: 1.52rem !important; background-color: #bfbfbf !important;" title="{{progress}}%">
-                                                <div class="progress-bar" role="progressbar" style="width: {{progress}}%;background-color:#00a505ab !important;" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100">
-                                                    {{progress}}%
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td style="width: 5%;">
-                                            {{^complete}}
-                                                <a href="javascript:void(0);" style="font-size: 20px; color: Gray;">
-                                                    <i class="fa fa-check-square"></i>
-                                                </a>
-                                            {{/complete}}
-                                        </td>
-                                    </tr>
-                                    {{/goals}}
-                                </tbody>
-                            </table>
-                        </div> 
-                    </td>
-                </tr>
-                {{/objectives}}
+                {{#data}}
+                    {{#is_objective}}
+                        {{> block_goalsahead/dashboard_line_objective }}
+                    {{/is_objective}}
+                    {{#is_goal}}
+                        {{> block_goalsahead/dashboard_line_goal }}
+                    {{/is_goal}}
+                {{/data}}
             </tbody>
         </table>
     </div>
