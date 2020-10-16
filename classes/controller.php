@@ -6,7 +6,7 @@ abstract class controller implements \renderable, \templatable {
     protected $output;
     private $default_page;
 
-    abstract protected function init_outputs();
+    abstract protected function init_outputs($page);
 
     public function get_output() {
         return $this->output;

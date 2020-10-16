@@ -48,7 +48,7 @@ class block_goalsahead extends block_base {
      * @return stdClass The block contents.
      */
     public function get_content() {
-        global $PAGE, $OUTPUT;
+        global $CFG;
 
         if ($this->content !== null) {
             return $this->content;
@@ -64,19 +64,30 @@ class block_goalsahead extends block_base {
         $this->content->icons = array();
 
         $output = $this->page->get_renderer('block_goalsahead');
-
         if (!empty($this->config->text)) {
             $this->content->text = $this->config->text;
         } else {
             # TODO substituir valores fixos por constantes
-            $path = '\\block_goalsahead\\output\\';
             $page_output = optional_param('page', '', PARAM_TEXT);
             $template_output = optional_param('template', '', PARAM_TEXT);
+
+            $page_output = 'objectives';
+            $template_output = 'form';
+
+            $path = '\\block_goalsahead\\output\\';
             $class = $path . (class_exists($path . $page_output)? $page_output : 'dashboard');
+
             $controller = new $class($template_output);
-            $text = $output->render_generic($controller);
-            $this->content->text = $text;
+            $text = $output->render_content($controller);
+
+            $this->content->text = (!empty($text)? $text : "");
+            
         }
+        
+        $this->page->requires->jquery();
+        $this->page->requires->js(new moodle_url($CFG->wwwroot . '/blocks/goalsahead/webroot/js/block_goalsahead.js'));
+
+        $this->content->text .= '<script src="https://cdn.ckeditor.com/ckeditor5/23.0.0/classic/ckeditor.js"></script>';
 
         return $this->content;
     }

@@ -13,7 +13,9 @@ class dashboard extends controller{
 
     public function init_outputs($page = 'dashboard') {
         $output['dashboard'] = array(
+            "render" => "template",
             "template" => "dashboard",
+            "writer" => null,
             "load_data" => "load_data_dashboard"
         );
 
