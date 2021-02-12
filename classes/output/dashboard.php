@@ -5,7 +5,7 @@ namespace block_goalsahead\output;
 use block_goalsahead\controller;
 
 class dashboard extends controller{
-    public function __construct($page = 'dashboard') {
+    public function __construct($page = 'dashboard', $data = []) {
         $this->default_page = 'dashboard';
 
         $this->init_outputs($page);

@@ -93,13 +93,16 @@
 }}
 <div>
     <h3>{{str.dashboardtitle}}</h3>
-    <div style="display: block;float: right; margin: 5px;">
-        <a href="javascript:void(0);" style="font-size: 20px; color: Gray;">
-            <i class="fa fa-cubes"></i> {{str.objectives}}
-        </a>
-        <a href="javascript:void(0);" style="font-size: 20px; color: Gray;">
-            <i class="fa fa-cube"></i> {{str.goals}}
-        </a>
+    <div style="display: inline;float: right; margin: 5px;">
+        <form id="form_create" method="post">
+                <input type="hidden" value="" name="goalsahead_page[form]">
+                <a href="javascript:void(0);" style="font-size: 20px; color: Gray;" class="btn-create" data-page="objectives">
+                    <i class="fa fa-cubes"></i> {{str.objectives}}
+                </a>
+                <a href="javascript:void(0);" style="font-size: 20px; color: Gray;"  class="btn-create" data-page="goals">
+                    <i class="fa fa-cube"></i> {{str.goals}}
+                </a>
+        </form>
     </div>
     <!-- Verify has data, else no data message -->
     <div style="display: block;">

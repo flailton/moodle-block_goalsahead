@@ -3,3 +3,11 @@ $string['pluginname'] = 'Goals Ahead';
 $string['objectivesname'] = 'Objetivos';
 $string['goalsname'] = 'Metas';
 $string['dashboardtitle'] = 'Objetivos e Metas';
+
+$string['objectivename'] = 'Nome do objetivo';
+$string['goalname'] = 'Nome da meta';
+$string['goalrequestdetails'] = 'Meta';
+$string['objevtiverequestdetails'] = 'Objetivo';
+
+$string['objectivelinked'] = 'Objetivos / Metas vinvuladas';
+$string['goallinked'] = 'Curso, Tópico e Atividades/Recursos vinculados';

@@ -14,7 +14,6 @@ class renderer extends \plugin_renderer_base {
      */
     public function render_content(\templatable $output) {
         $page = null;
-        $param = [];
 
         $data = $output->export_for_template($this);
 
@@ -44,16 +43,14 @@ class renderer extends \plugin_renderer_base {
      * @param \templatable $output
      * @return string|boolean
      */
-    public function render_html($output_config, $data) {
+    public function render_forms($output_config, $data) {
         $page = null;
-
-        $path = '\\block_goalsahead\\view\\';
+        $path = '\\block_goalsahead\\';
         $class = (class_exists($path . $output_config['template'])? $path . $output_config['template'] : null);
         
         if(!empty($class)){
             $view = new $class();
             $method = $output_config['writer'];
-
             $page = $view->$method($data);
         }
 

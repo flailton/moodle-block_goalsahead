@@ -68,16 +68,33 @@ class block_goalsahead extends block_base {
             $this->content->text = $this->config->text;
         } else {
             # TODO substituir valores fixos por constantes
-            $page_output = optional_param('page', '', PARAM_TEXT);
-            $template_output = optional_param('template', '', PARAM_TEXT);
+            $this->debug($_POST);
 
-            $page_output = 'objectives';
-            $template_output = 'form';
+            $templatePage = isset($_POST['goalsahead_page']) && key($_POST['goalsahead_page']) !== null? key($_POST['goalsahead_page']) : "";
+            $pageOutput = isset($_POST['goalsahead_page'][$templatePage])? $_POST['goalsahead_page'][$templatePage] : "";
+            $dataPage = isset($_POST['goalsahead_page']['data'])? $_POST['goalsahead_page']['data'] : [];
+
+            $templateAction = isset($_POST['goalsahead_action']) && key($_POST['goalsahead_action']) !== null? key($_POST['goalsahead_action']) : "";
+            $action = isset($_POST['goalsahead_page'][$templateAction]) && key($_POST['goalsahead_page'][$templateAction]) !== null? key($_POST['goalsahead_page'][$templateAction]) : "";
+            $pageAction = isset($_POST['goalsahead_page'][$templateAction][$action])? $_POST['goalsahead_page'][$templateAction][$action] : "";
+            $dataAction = isset($_POST['goalsahead_page']['data'])? $_POST['goalsahead_page']['data'] : [];
 
             $path = '\\block_goalsahead\\output\\';
-            $class = $path . (class_exists($path . $page_output)? $page_output : 'dashboard');
 
-            $controller = new $class($template_output);
+            if(!empty($action)){
+                # TODO chamar a ação
+                $classAction = $path . (class_exists($path . $pageAction)? $pageAction : false);
+                if($classAction){
+                    $controllerAction = new $classAction($templateAction, $dataAction);
+                    if(method_exists($controllerAction, $action)){
+                        $controllerAction->$action();
+                    }
+                }
+            }
+
+            $class = $path . (class_exists($path . $pageOutput)? $pageOutput : 'dashboard');
+            var_dump($path . $pageOutput);
+            $controller = new $class($templatePage, $dataPage);
             $text = $output->render_content($controller);
 
             $this->content->text = (!empty($text)? $text : "");
@@ -86,8 +103,6 @@ class block_goalsahead extends block_base {
         
         $this->page->requires->jquery();
         $this->page->requires->js(new moodle_url($CFG->wwwroot . '/blocks/goalsahead/webroot/js/block_goalsahead.js'));
-
-        $this->content->text .= '<script src="https://cdn.ckeditor.com/ckeditor5/23.0.0/classic/ckeditor.js"></script>';
 
         return $this->content;
     }

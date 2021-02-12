@@ -6,13 +6,10 @@ require(["jquery"], function($) {
             $(this).find('i').attr("class", classes);
         });
 
-        if($('#block_goalsahead_editor').length > 0){
-            ClassicEditor
-                .create( document.querySelector( '#block_goalsahead_editor' ) )
-                .catch( error => {
-                    console.error( error );
-            } );
-        }
-        
+        $('.btn-create').on('click', function(){
+            var action = $(this).attr('data-page');
+            $('input[name="goalsahead_page[form]"]').val(action);
+            $('#form_create').submit();
+        });
     });
 });
