@@ -68,7 +68,8 @@ class block_goalsahead extends block_base {
             $this->content->text = $this->config->text;
         } else {
             # TODO substituir valores fixos por constantes
-            $this->debug($_POST);
+            //$this->debug($_POST);
+            //$this->debug(enrol_get_my_courses());
 
             $templatePage = isset($_POST['goalsahead_page']) && key($_POST['goalsahead_page']) !== null? key($_POST['goalsahead_page']) : "";
             $pageOutput = isset($_POST['goalsahead_page'][$templatePage])? $_POST['goalsahead_page'][$templatePage] : "";
@@ -93,7 +94,6 @@ class block_goalsahead extends block_base {
             }
 
             $class = $path . (class_exists($path . $pageOutput)? $pageOutput : 'dashboard');
-            var_dump($path . $pageOutput);
             $controller = new $class($templatePage, $dataPage);
             $text = $output->render_content($controller);
 
@@ -132,7 +132,7 @@ class block_goalsahead extends block_base {
     }
 
     public function debug($var) {
-        echo '<pre>';
+        echo '<pre><br><br><br><br>';
         var_dump($var);
         echo '</pre>';
     }
