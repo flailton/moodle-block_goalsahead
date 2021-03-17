@@ -50,7 +50,7 @@ class renderer extends \plugin_renderer_base {
         
         if(!empty($class)){
             $view = new $class();
-            $method = $output_config['writer'];
+            $method = $output_config['output'];
             $page = $view->$method($data);
         }
 

@@ -1,66 +1,103 @@
 <?php
+
 namespace block_goalsahead\output;
 
 use block_goalsahead\controller;
 use block_goalsahead\form\objectiveshtml_form;
 
-class objectives extends controller{
-    public function __construct($page = 'form', $data = []) {
+class objectives extends controller
+{
+    private const TABLE = 'bga_objectives';
+
+    public function __construct($page = 'form', $data = [])
+    {
         $this->default_page = 'form';
-        $page_render = (isset($output[$page])? $page : $this->default_page);
+        $page_render = (isset($output[$page]) ? $page : $this->default_page);
 
         $this->init_outputs($page_render);
     }
 
-    protected function init_outputs($page) {
-        $output['form'] = array(
+    protected function init_outputs($page)
+    {
+        $param['form'] = array(
             "render" => "forms",
             "template" => "output\\objectives",
-            "load_data" => "load_data_form",
-            "writer" => "objectives_form"
+            "output" => "objectives_form"
         );
 
-        
+        $output = $param;
+
         $this->set_output($output[$page]);
     }
-    
-    public function load_data_form() {
-        return [
-            'str' => [
-                'objectivestitle' => get_string('objectivestitle', 'block_objectivesahead'),
-                'objectives' => get_string('objectivesname', 'block_objectivesahead'),
-                'objectives' => get_string('objectivesname', 'block_objectivesahead')
-            ],
-            'data' => [
-                'id' => 1,
-                'is_goal' => false,
-                'is_objective' => true,
-                'has_associate_data' => true,
-                'title' => 'Obj 1',
-                'progress' => 70
-            ]
-        ];
-    }
-    
-    public function objectives_form() {
+
+    public function objectives_form($action = '')
+    {
         $mform = new objectiveshtml_form();
-        
-        if ($mform->is_cancelled()) {
-                //Handle form cancel operation, if cancel button is present on form
-        } else if ($fromform == $mform->get_data()) {
-            $text = $mform->render();
-                //In this case you process validated data. $mform->get_data() returns data posted in form.
-        } else {
-                // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
-                // or on the first display of the form.
 
-                //Set default data (if any)
-                $mform->set_data();
-
-                //displays the form
-                $text = $mform->render();
+        if (!$mform->is_cancelled()) {
+            if ($data = $mform->get_data()) {
+                if (empty($data->id)) {
+                    self::insert($data);
+                } else {
+                    self::update($data);
+                }
+            } else {
+                if(empty($action)){
+                    $mform->set_data($mform->get_data());
+                    $text = $mform->render();
+                }
+            }
         }
 
         return $text;
+    }
+
+    private function insert($data)
+    {
+        global $DB, $USER;
+
+        $objective = new \stdClass();
+
+        $objective->title = $data->title;
+        $objective->description = $data->description['text'];
+        $timecreated = (new \DateTime())->setTimestamp(time());
+        $objective->timecreated = $timecreated->getTimestamp();
+        $objective->usercreated = $USER->id;
+        $objective->starttime = $data->starttime;
+        $objective->endtime = $data->endtime;
+
+        $objective->id = $DB->insert_record(constant("self::TABLE"), $objective);
+
+        return $objective;
+    }
+
+    private function update($data)
+    {
+        global $DB;
+
+        $objective = $DB->get_record(constant("self::TABLE"), array('id' => $data->id));
+
+        $objective->title = $data->title;
+        $objective->description = $data->description['text'];
+        $objective->starttime = $data->starttime;
+        $objective->endtime = $data->endtime;
+        
+        $DB->update_record(constant("self::TABLE"), $objective);
+
+        return $objective;
+    }
+
+    private function complete($id)
+    {
+        global $DB;
+
+        $objective = $DB->get_record(constant("self::TABLE"), array('id' => $id));
+
+        $timecompleted = (new \DateTime())->setTimestamp(time());
+        $objective->timecompleted = $timecompleted->getTimestamp();
+        
+        $DB->update_record(constant("self::TABLE"), $objective);
+
+        return $objective;
     }
 }

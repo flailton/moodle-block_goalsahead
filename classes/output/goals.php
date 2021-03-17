@@ -6,6 +6,9 @@ use block_goalsahead\controller;
 use block_goalsahead\form\goalshtml_form;
 
 class goals extends controller{
+
+    private const TABLE = 'bga_goals';
+
     public function __construct($page = 'form', $data = []) {
         $this->default_page = 'form';
         $page_render = (isset($output[$page])? $page : $this->default_page);
@@ -17,8 +20,7 @@ class goals extends controller{
         $output['form'] = array(
             "render" => "forms",
             "template" => "output\\goals",
-            "load_data" => "load_data_form",
-            "writer" => "goals_form"
+            "output" => "goals_form"
         );
 
         $this->set_output($output[$page]);
@@ -42,25 +44,76 @@ class goals extends controller{
         ];
     }
     
-    public function goals_form() {
+    public function goals_form()
+    {
         $mform = new goalshtml_form();
-        
-        if ($mform->is_cancelled()) {
-                //Handle form cancel operation, if cancel button is present on form
-        } else if ($fromform == $mform->get_data()) {
-            $text = $mform->render();
-                //In this case you process validated data. $mform->get_data() returns data posted in form.
-        } else {
-                // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
-                // or on the first display of the form.
 
-                //Set default data (if any)
-                $mform->set_data();
-
-                //displays the form
+        if (!$mform->is_cancelled()) {
+            if ($data = $mform->get_data()) {
+                if (empty($data->id)) {
+                    self::insert($data);
+                } else {
+                    self::update($data);
+                }
+            } else {
+                $mform->set_data($mform->get_data());
                 $text = $mform->render();
+            }
         }
 
         return $text;
+    }
+
+    private function insert($data)
+    {
+        global $DB, $USER;
+
+        $goal = new \stdClass();
+
+        $goal->title = $data->title;
+        $goal->description = $data->description['text'];
+        $timecreated = (new \DateTime())->setTimestamp(time());
+        $goal->timecreated = $timecreated->getTimestamp();
+        $goal->usercreated = $USER->id;
+        $goal->starttime = $data->starttime;
+        $goal->endtime = $data->endtime;
+        $goal->progresstype = $data->progresstype;
+        $goal->progresstotal = $data->progresstotal;
+
+        $goal->id = $DB->insert_record(constant("self::TABLE"), $goal);
+
+        return $goal;
+    }
+
+    private function update($data)
+    {
+        global $DB;
+        
+        $goal = $DB->get_record(constant("self::TABLE"), array('id' => $data->id));
+
+        $goal->title = $data->title;
+        $goal->description = $data->description['text'];
+        $goal->starttime = $data->starttime;
+        $goal->endtime = $data->endtime;
+        $goal->progresstype = $data->progresstype;
+        $goal->progresstotal = ($data->progresstype === 'W'? $data->progresstotal : null);
+        
+        $DB->update_record(constant("self::TABLE"), $goal);
+
+        return $goal;
+    }
+
+    private function complete($id)
+    {
+        global $DB;
+
+        $goal = $DB->get_record(constant("self::TABLE"), array('id' => $id));
+
+        $timecompleted = (new \DateTime())->setTimestamp(time());
+        $goal->timecompleted = $timecompleted->getTimestamp();
+        
+        $DB->update_record(constant("self::TABLE"), $goal);
+
+        return $goal;
     }
 }

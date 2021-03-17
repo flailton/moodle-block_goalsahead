@@ -6,10 +6,14 @@ require(["jquery"], function($) {
             $(this).find('i').attr("class", classes);
         });
 
-        $('.btn-create').on('click', function(){
-            var action = $(this).attr('data-page');
-            $('input[name="goalsahead_page[form]"]').val(action);
-            $('#form_create').submit();
+        $('.btn-form').on('click', function(){
+            var page = $(this).attr('data-page');
+            var id = $(this).attr('data-id');
+
+            $('#form_goalsahead').find('input[name="goalsahead_page[form]"]').val(page);
+            $('#form_goalsahead').find('input[name="id"]').val(id);
+
+            $('#form_goalsahead').submit();
         });
     });
 });

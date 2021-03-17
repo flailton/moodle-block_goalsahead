@@ -2,11 +2,12 @@
 $string['pluginname'] = 'Goals Ahead';
 $string['objectivesname'] = 'Objetivos';
 $string['goalsname'] = 'Metas';
+$string['objectivename'] = 'Objetivo';
+$string['goalname'] = 'Meta';
 $string['dashboardtitle'] = 'Objetivos e Metas';
 
-$string['objectivename'] = 'Nome do objetivo';
-$string['goalname'] = 'Nome da meta';
-$string['goalrequestdetails'] = 'Meta';
+$string['starttime'] = 'Data de Início';
+$string['endtime'] = 'Data Limite';
 
 $string['objectiverequestdetails'] = 'Objetivo';
 

@@ -27,9 +27,13 @@
         {{/has_associate_data}}
     </td>
     <td style="text-align:left">
-        <div class="resource-name">{{title}}</div>
+        <div class="resource-name">
+            <a href="javascript:void(0);" style="font-size: 20px; color: Gray;" class="btn-form" data-page="objectives" data-id="{{id}}">
+                {{title}}
+            </a>
+        </div>
     </td>
-    <td>
+    <td style="width: 25%;">
         <div>
             <div class="progress" style="border-radius: 4px; height: 1.52rem !important; background-color: #bfbfbf !important;" title="{{progress}}%">
                 <div class="progress-bar" role="progressbar" style="width: {{progress}}%;background-color:#00a505ab !important;" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100">

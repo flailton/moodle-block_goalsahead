@@ -69,33 +69,41 @@ class block_goalsahead extends block_base {
         } else {
             # TODO substituir valores fixos por constantes
             //$this->debug($_POST);
-            //$this->debug(enrol_get_my_courses());
 
-            $templatePage = isset($_POST['goalsahead_page']) && key($_POST['goalsahead_page']) !== null? key($_POST['goalsahead_page']) : "";
-            $pageOutput = isset($_POST['goalsahead_page'][$templatePage])? $_POST['goalsahead_page'][$templatePage] : "";
-            $dataPage = isset($_POST['goalsahead_page']['data'])? $_POST['goalsahead_page']['data'] : [];
+            $page = key($_POST['goalsahead_page']);
+            $pageOutput = isset($page)? $_POST['goalsahead_page'][$page] : null;
+            $pageData = isset($_POST['goalsahead_page']['data'])? $_POST['goalsahead_page']['data'] : [];
 
-            $templateAction = isset($_POST['goalsahead_action']) && key($_POST['goalsahead_action']) !== null? key($_POST['goalsahead_action']) : "";
-            $action = isset($_POST['goalsahead_page'][$templateAction]) && key($_POST['goalsahead_page'][$templateAction]) !== null? key($_POST['goalsahead_page'][$templateAction]) : "";
-            $pageAction = isset($_POST['goalsahead_page'][$templateAction][$action])? $_POST['goalsahead_page'][$templateAction][$action] : "";
-            $dataAction = isset($_POST['goalsahead_page']['data'])? $_POST['goalsahead_page']['data'] : [];
+            // goalsahead_action[insert][objective]
+            // $templateAction = isset($_POST['goalsahead_action']) && key($_POST['goalsahead_action']) !== null?  : "";
+            // $action = isset($_POST['goalsahead_page'][$templateAction]) && key($_POST['goalsahead_page'][$templateAction]) !== null? key($_POST['goalsahead_page'][$templateAction]) : "";
+            // $pageAction = isset($_POST['goalsahead_page'][$templateAction][$action])? $_POST['goalsahead_page'][$templateAction][$action] : "";
+            
+            // $dataAction = isset($_POST['goalsahead_page']['data'])? $_POST['goalsahead_page']['data'] : [];
 
+            // 
+
+            // if(!empty($action)){
+            //     # TODO chamar a ação
+            //     $classAction = $path . (class_exists($path . $pageAction)? $pageAction : false);
+            //     if($classAction){
+            //         $controllerAction = new $classAction($templateAction, $dataAction);
+            //         if(method_exists($controllerAction, $action)){
+            //             $controllerAction->$action();
+            //         }
+            //     }
+            // }
             $path = '\\block_goalsahead\\output\\';
-
-            if(!empty($action)){
-                # TODO chamar a ação
-                $classAction = $path . (class_exists($path . $pageAction)? $pageAction : false);
-                if($classAction){
-                    $controllerAction = new $classAction($templateAction, $dataAction);
-                    if(method_exists($controllerAction, $action)){
-                        $controllerAction->$action();
-                    }
-                }
-            }
-
             $class = $path . (class_exists($path . $pageOutput)? $pageOutput : 'dashboard');
-            $controller = new $class($templatePage, $dataPage);
+            $controller = new $class($page, $pageData);
+
             $text = $output->render_content($controller);
+
+            if(empty($text)){
+                $class = $path . 'dashboard';
+                $controller = new $class();
+                $text = $output->render_content($controller);
+            }
 
             $this->content->text = (!empty($text)? $text : "");
             
