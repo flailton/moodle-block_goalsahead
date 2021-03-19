@@ -28,9 +28,7 @@
     </td>
     <td style="text-align:left">
         <div class="resource-name">
-            <a href="javascript:void(0);" style="font-size: 20px; color: Gray;" class="btn-form" data-page="objectives" data-id="{{id}}">
-                {{title}}
-            </a>
+            {{title}}
         </div>
     </td>
     <td style="width: 25%;">
@@ -44,10 +42,16 @@
     </td>
     <td style="width: 5%;">
         {{^complete}}
-            <a href="javascript:void(0);" style="font-size: 20px; color: Gray;">
+            <a href="javascript:void(0);" style="font-size: 20px; color: Gray;" class="btn-action" route="action" data-action="complete" data-page="objectives" data-id="{{id}}">
                 <i class="fa fa-check-square"></i>
             </a>
         {{/complete}}
+        <a href="javascript:void(0);" style="font-size: 20px; color: Gray;" class="btn-form" route="form" data-page="objectives" data-id="{{id}}">
+            <i class="fa fa-edit"></i>
+        </a>
+        <a href="javascript:void(0);" style="font-size: 20px; color: Gray;" class="btn-action" route="action" data-action="delete" data-page="objectives" data-id="{{id}}">
+            <i class="fa fa-trash"></i>
+        </a>
     </td>
 </tr>
 {{#has_associate_data}}

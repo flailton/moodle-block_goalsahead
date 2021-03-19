@@ -15,3 +15,6 @@ $string['objectivelinks'] = 'Objetivos / Metas vinvuladas';
 $string['goallinked'] = 'Curso, Tópico e Atividades/Recursos vinculados';
 
 $string['enddateobjective'] = 'Data de encerramento do objetivo';
+
+$string['messageconfirmdelete'] = 'Deseja remover este registro?';
+$string['messageconfirmcomplete'] = 'Deseja concluir o progresso?';

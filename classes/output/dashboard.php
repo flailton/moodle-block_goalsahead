@@ -17,7 +17,7 @@ class dashboard extends controller
     {
         $output['dashboard'] = array(
             "render" => "template",
-            "template" => "dashboard",
+            "route" => "dashboard",
             "load_data" => "load_data_dashboard"
         );
 
@@ -41,6 +41,7 @@ class dashboard extends controller
             $item['has_associate_data'] = false;
             $item['title'] = $objective->title;
             $item['progress'] = (empty($objective->timecompleted) ? 0 : 100);
+            $item['complete'] = (empty($objective->timecompleted) ? false : true);
             $item['associate_data'] = [];
 
             array_push($data, $item);
@@ -53,6 +54,8 @@ class dashboard extends controller
             $item['has_associate_data'] = false;
             $item['title'] = $goal->title;
             $item['progress'] = (empty($goal->timecompleted) ? 0 : 100);
+            $item['progressenable'] = ($goal->progresstype <> 'D' && empty($goal->timecompleted)? true : false);
+            $item['complete'] = (empty($goal->timecompleted) ? false : true);
             $item['associate_data'] = [];
 
             array_push($data, $item);

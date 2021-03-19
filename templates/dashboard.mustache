@@ -95,14 +95,13 @@
     <h3>{{str.dashboardtitle}}</h3>
     <div style="display: inline;float: right; margin: 5px;">
         <form id="form_goalsahead" method="post">
-                <input type="hidden" value="" name="goalsahead_page[form]">
-                <input type="hidden" value="" name="id">
-                <a href="javascript:void(0);" style="font-size: 20px; color: Gray;" class="btn-form" data-page="objectives">
-                    <i class="fa fa-cubes"></i> {{str.objectives}}
-                </a>
-                <a href="javascript:void(0);" style="font-size: 20px; color: Gray;"  class="btn-form" data-page="goals">
-                    <i class="fa fa-cube"></i> {{str.goals}}
-                </a>
+            <input type="hidden" value="" name="goalsahead_page">
+            <a href="javascript:void(0);" style="font-size: 20px; color: Gray;" class="btn-form" route="form" data-page="objectives">
+                <i class="fa fa-cubes"></i> {{str.objectives}}
+            </a>
+            <a href="javascript:void(0);" style="font-size: 20px; color: Gray;" class="btn-form" route="form" data-page="goals">
+                <i class="fa fa-cube"></i> {{str.goals}}
+            </a>
         </form>
     </div>
     <!-- Verify has data, else no data message -->

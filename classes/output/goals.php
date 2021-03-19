@@ -19,8 +19,13 @@ class goals extends controller{
     protected function init_outputs($page) {
         $output['form'] = array(
             "render" => "forms",
-            "template" => "output\\goals",
-            "output" => "goals_form"
+            "route" => "output\\goals",
+            "call" => "goals_form"
+        );
+
+        $param['action'] = array(
+            "render" => "action",
+            "route" => "output\\goals"
         );
 
         $this->set_output($output[$page]);
@@ -103,10 +108,18 @@ class goals extends controller{
         return $goal;
     }
 
-    private function complete($id)
+    private function delete()
+    {
+        global $DB;
+        $id = required_param('id', PARAM_INT);
+        return $DB->delete_records(constant("self::TABLE"), array('id' => $id));
+    }
+
+    private function complete()
     {
         global $DB;
 
+        $id = required_param('id', PARAM_INT);
         $goal = $DB->get_record(constant("self::TABLE"), array('id' => $id));
 
         $timecompleted = (new \DateTime())->setTimestamp(time());

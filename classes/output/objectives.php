@@ -11,23 +11,26 @@ class objectives extends controller
 
     public function __construct($page = 'form', $data = [])
     {
-        $this->default_page = 'form';
-        $page_render = (isset($output[$page]) ? $page : $this->default_page);
-
-        $this->init_outputs($page_render);
+        $this->default_page = 'form';        
+        $this->init_outputs($page);
     }
 
     protected function init_outputs($page)
     {
         $param['form'] = array(
             "render" => "forms",
-            "template" => "output\\objectives",
-            "output" => "objectives_form"
+            "route" => "output\\objectives",
+            "call" => "objectives_form"
         );
+        
+        $param['action'] = array(
+            "render" => "action",
+            "route" => "output\\objectives"
+        );
+        
+        $page_render = (isset($param[$page]) ? $page : $this->default_page);
 
-        $output = $param;
-
-        $this->set_output($output[$page]);
+        $this->set_output($param[$page_render]);
     }
 
     public function objectives_form($action = '')
@@ -87,10 +90,19 @@ class objectives extends controller
         return $objective;
     }
 
-    private function complete($id)
+    public function delete()
     {
         global $DB;
 
+        $id = required_param('id', PARAM_INT);
+        return $DB->delete_records(constant("self::TABLE"), array('id' => $id));
+    }
+
+    public function complete()
+    {
+        global $DB;
+
+        $id = required_param('id', PARAM_INT);
         $objective = $DB->get_record(constant("self::TABLE"), array('id' => $id));
 
         $timecompleted = (new \DateTime())->setTimestamp(time());

@@ -68,34 +68,13 @@ class block_goalsahead extends block_base {
             $this->content->text = $this->config->text;
         } else {
             # TODO substituir valores fixos por constantes
-            //$this->debug($_POST);
 
             $page = key($_POST['goalsahead_page']);
-            $pageOutput = isset($page)? $_POST['goalsahead_page'][$page] : null;
-            $pageData = isset($_POST['goalsahead_page']['data'])? $_POST['goalsahead_page']['data'] : [];
+            $pageRoute = isset($page)? $_POST['goalsahead_page'][$page] : null;
 
-            // goalsahead_action[insert][objective]
-            // $templateAction = isset($_POST['goalsahead_action']) && key($_POST['goalsahead_action']) !== null?  : "";
-            // $action = isset($_POST['goalsahead_page'][$templateAction]) && key($_POST['goalsahead_page'][$templateAction]) !== null? key($_POST['goalsahead_page'][$templateAction]) : "";
-            // $pageAction = isset($_POST['goalsahead_page'][$templateAction][$action])? $_POST['goalsahead_page'][$templateAction][$action] : "";
-            
-            // $dataAction = isset($_POST['goalsahead_page']['data'])? $_POST['goalsahead_page']['data'] : [];
-
-            // 
-
-            // if(!empty($action)){
-            //     # TODO chamar a ação
-            //     $classAction = $path . (class_exists($path . $pageAction)? $pageAction : false);
-            //     if($classAction){
-            //         $controllerAction = new $classAction($templateAction, $dataAction);
-            //         if(method_exists($controllerAction, $action)){
-            //             $controllerAction->$action();
-            //         }
-            //     }
-            // }
             $path = '\\block_goalsahead\\output\\';
-            $class = $path . (class_exists($path . $pageOutput)? $pageOutput : 'dashboard');
-            $controller = new $class($page, $pageData);
+            $class = $path . (class_exists($path . $pageRoute)? $pageRoute : 'dashboard');
+            $controller = new $class($page);
 
             $text = $output->render_content($controller);
 

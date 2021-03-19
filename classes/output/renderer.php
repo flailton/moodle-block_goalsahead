@@ -6,6 +6,8 @@ defined('MOODLE_INTERNAL') || die();
 
 class renderer extends \plugin_renderer_base {
 
+    protected $output_config;
+
     /**
      * Render plugin content.
      *
@@ -17,11 +19,11 @@ class renderer extends \plugin_renderer_base {
 
         $data = $output->export_for_template($this);
 
-        $output_config = $output->get_output();
-        $render_method = "render_".$output_config['render'];
+        $this->output_config = $output->get_output();
+        $render_method = "render_".$this->output_config['render'];
 
         if(!empty($render_method) && method_exists($this, $render_method)){
-            $page = $this->$render_method($output_config, $data);
+            $page = $this->$render_method($output, $data);
         }
 
         return $page;
@@ -33,8 +35,8 @@ class renderer extends \plugin_renderer_base {
      * @param \templatable $output
      * @return string|boolean
      */
-    public function render_template($output_config, $data) {
-        return $this->render_from_template('block_goalsahead/' . $output_config['template'], $data);
+    public function render_template($output, $data) {
+        return $this->render_from_template('block_goalsahead/' . $this->output_config['route'], $data);
     }
 
     /**
@@ -43,18 +45,28 @@ class renderer extends \plugin_renderer_base {
      * @param \templatable $output
      * @return string|boolean
      */
-    public function render_forms($output_config, $data) {
-        $page = null;
-        $path = '\\block_goalsahead\\';
-        $class = (class_exists($path . $output_config['template'])? $path . $output_config['template'] : null);
-        
+    public function render_forms($class, $data) {        
         if(!empty($class)){
-            $view = new $class();
-            $method = $output_config['output'];
-            $page = $view->$method($data);
+            $method = $this->output_config['call'];
+            $page = $class->$method($data);
         }
 
         return $page;
+    }
+
+    /**
+     * Call some action.
+     *
+     * @param \templatable $output
+     * @return string|boolean
+     */
+    public function render_action($class, $data) {
+        if(!empty($class)){
+            $method = required_param('action', PARAM_TEXT);
+            $class->$method();
+        }
+
+        return;
     }
 }
 
