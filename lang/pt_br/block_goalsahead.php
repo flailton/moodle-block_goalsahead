@@ -18,3 +18,5 @@ $string['enddateobjective'] = 'Data de encerramento do objetivo';
 
 $string['messageconfirmdelete'] = 'Deseja remover este registro?';
 $string['messageconfirmcomplete'] = 'Deseja concluir o progresso?';
+
+$string['progressheader'] = 'Acompanhamento de Progresso';

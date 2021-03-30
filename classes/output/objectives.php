@@ -29,7 +29,6 @@ class objectives extends controller
         );
         
         $page_render = (isset($param[$page]) ? $page : $this->default_page);
-
         $this->set_output($param[$page_render]);
     }
 

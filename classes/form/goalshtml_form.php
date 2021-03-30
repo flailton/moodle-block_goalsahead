@@ -45,16 +45,17 @@ class goalshtml_form extends \moodleform
 
         $options = [
             'D' => get_string('default'), 
-            'W' => get_string('workload'), 
-            'P' => get_string('percent')
+            'W' => get_string('workload', 'block_goalsahead'), 
+            'P' => get_string('percent', 'block_goalsahead')
         ];
 
         $mform->addElement('select', 'progresstype', get_string('progresstype', 'block_goalsahead'), $options);
         $mform->addHelpButton('progresstype', 'progresstype', 'block_goalsahead');
         $mform->addRule('progresstype', get_string('progresstyperequired', 'block_goalsahead'), 'required', null, 'client');
 
+        $progresstotalarr[] = $mform->createElement('html', get_string('total') . ' &nbsp;');
         $progresstotalarr[] = $mform->createElement('text', 'progresstotal', '', 'size="1"');
-        $progresstotalarr[] = $mform->createElement('html', 'h');
+        $progresstotalarr[] = $mform->createElement('html', ' h');
         $mform->addGroup($progresstotalarr, 'progresstotalarr', '', array(' '), false);
 
         $mform->disabledIf('progresstotal', 'progresstype', 'neq', 'W');

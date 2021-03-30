@@ -53,8 +53,18 @@ class dashboard extends controller
             $item['is_objective'] = false;
             $item['has_associate_data'] = false;
             $item['title'] = $goal->title;
-            $item['progress'] = (empty($goal->timecompleted) ? 0 : 100);
-            $item['progressenable'] = ($goal->progresstype <> 'D' && empty($goal->timecompleted)? true : false);
+            $item['progressenable'] = ($goal->progresstype <> 'D'? true : false);
+            $accruedprogress = 0;
+            if($goal->progresstype <> 'D'){
+                $accruedprogress = $DB->get_record_sql('
+                    SELECT IFNULL(SUM(gp.progress), 0) as total
+                    FROM moodle.mdl_bga_goal_progress gp
+                    WHERE gp.goalid = :goalid ',  
+                    ['goalid' => $goal->id ]
+                );
+                $accruedprogress = (int) (($accruedprogress->total * 100) / (!empty($goal->progresstotal)? $goal->progresstotal : 100 ));
+            }
+            $item['progress'] = (empty($goal->timecompleted) ? $accruedprogress : 100);
             $item['complete'] = (empty($goal->timecompleted) ? false : true);
             $item['associate_data'] = [];
 

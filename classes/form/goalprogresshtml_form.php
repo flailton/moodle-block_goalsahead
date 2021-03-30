@@ -7,11 +7,9 @@ include_once("$CFG->libdir/formslib.php");
 class goalprogresshtml_form extends \moodleform {
     //Add elements to form
     public function definition() {
-        global $DB, $USER;
-
         $mform = $this->_form;
         
-        $mform->addElement('header','objectivename', get_string('objectivename', 'block_goalsahead'));
+        $mform->addElement('header','progressheader', get_string('progressheader', 'block_goalsahead'));
 
         $mform->addElement('hidden', 'goalsahead_page[form]', 0);
         $mform->setDefault('goalsahead_page[form]', 'goalprogress');
@@ -31,7 +29,7 @@ class goalprogresshtml_form extends \moodleform {
         $mform->addElement('date_time_selector', 'timecreated', get_string('date'));
         $mform->addHelpButton('timecreated', 'timecreated', 'block_goalsahead');
         $mform->addRule('timecreated', get_string('timecreatedrequired', 'block_goalsahead'), 'required', null, 'client');
-        $timecreated = (new \DateTime())->setTimestamp(usergetmidnight(time()));
+        $timecreated = (new \DateTime())->setTimestamp(time());
         $mform->setDefault('timecreated', $timecreated->getTimestamp());
 
         // When two elements we need a group.
@@ -54,16 +52,16 @@ class goalprogresshtml_form extends \moodleform {
             $errors['progress'] = get_string('progressminlength', 'block_goalsahead');
         }
 
-        $goal = $DB->get_records('bga_goal',  ['id' => $data->goalid]);
-        $goal->accruedprogress = $DB->get_record_sql('
-            SELECT IFNULL(0, SUM(gp.progress))
+        $goal = $DB->get_record('bga_goals',  ['id' => $data['goalid'] ]);
+        $accruedprogress = $DB->get_record_sql('
+            SELECT IFNULL(SUM(gp.progress), 0) as total
             FROM moodle.mdl_bga_goal_progress gp
             WHERE gp.goalid = :goalid ',  
-            ['goalid' => $data->goalid]
+            ['goalid' => $data['goalid'] ]
         );
-        var_dump($goal->accruedprogress);
-        die;
-        if(($goal->accruedprogress + $data->progress) > $goal->progresstotal){
+
+        $progresstotal = ($goal->progresstype === 'W'? $goal->progresstotal : 100);
+        if(($accruedprogress->total + $data['progress']) > $progresstotal){
             $errors['progress'] = get_string('progressovercomplete', 'block_goalsahead');
         }
         

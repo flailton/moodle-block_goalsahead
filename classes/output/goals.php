@@ -10,10 +10,8 @@ class goals extends controller{
     private const TABLE = 'bga_goals';
 
     public function __construct($page = 'form', $data = []) {
-        $this->default_page = 'form';
-        $page_render = (isset($output[$page])? $page : $this->default_page);
-
-        $this->init_outputs($page_render);
+        $this->default_page = 'form';        
+        $this->init_outputs($page);
     }
 
     protected function init_outputs($page) {
@@ -28,7 +26,8 @@ class goals extends controller{
             "route" => "output\\goals"
         );
 
-        $this->set_output($output[$page]);
+        $page_render = (isset($param[$page]) ? $page : $this->default_page);
+        $this->set_output($param[$page_render]);
     }
     
     public function load_data_form() {
@@ -83,7 +82,7 @@ class goals extends controller{
         $goal->starttime = $data->starttime;
         $goal->endtime = $data->endtime;
         $goal->progresstype = $data->progresstype;
-        $goal->progresstotal = $data->progresstotal;
+        $goal->progresstotal = ($data->progresstype === 'W'? $data->progresstotal : 100);
 
         $goal->id = $DB->insert_record(constant("self::TABLE"), $goal);
 
@@ -108,14 +107,14 @@ class goals extends controller{
         return $goal;
     }
 
-    private function delete()
+    public function delete()
     {
         global $DB;
         $id = required_param('id', PARAM_INT);
         return $DB->delete_records(constant("self::TABLE"), array('id' => $id));
     }
 
-    private function complete()
+    public function complete()
     {
         global $DB;
 

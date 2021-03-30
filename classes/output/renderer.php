@@ -61,12 +61,21 @@ class renderer extends \plugin_renderer_base {
      * @return string|boolean
      */
     public function render_action($class, $data) {
+        $page = '';
+
         if(!empty($class)){
             $method = required_param('action', PARAM_TEXT);
             $class->$method();
+
+            if(!empty($this->output_config['redirect'])){
+                $classRedirect = get_class($class);
+                $controller = new $classRedirect($this->output_config['redirect']);
+
+                $page = $this->render_content($controller);
+            }
         }
 
-        return;
+        return $page;
     }
 }
 
