@@ -82,7 +82,7 @@ class goalprogress extends controller
         $goal = $DB->get_record('bga_goals', ['id' => $data->goalid]);
         $accruedprogress = $DB->get_record_sql('
             SELECT IFNULL(SUM(gp.progress), 0) as total
-            FROM moodle.mdl_bga_goal_progress gp
+            FROM mdl_bga_goal_progress gp
             WHERE gp.goalid = :goalid ',  
             ['goalid' => $data->goalid ]
         );
