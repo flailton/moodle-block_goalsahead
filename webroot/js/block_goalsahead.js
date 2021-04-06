@@ -9,9 +9,30 @@ require(["jquery", "core/str", "core/notification"], function($, str, notificati
         $('.btn-action').on('click', function(){
             var obj = this;
             var msg = 'messageconfirm' + $(this).attr('data-action');
-            
-            notification.confirm(M.util.get_string('confirm', 'block_goalsahead'), M.util.get_string(msg, 'block_goalsahead'), M.util.get_string('continue', 'block_goalsahead'), M.util.get_string('cancel', 'block_goalsahead'), function(){
-                formSubmit(obj);
+
+            var strings = [
+                {
+                    key: 'confirm',
+                    component: 'block_goalsahead'
+                },
+                {
+                    key: msg,
+                    component: 'block_goalsahead'
+                },
+                {
+                    key: 'continue',
+                    component: 'block_goalsahead'
+                },
+                {
+                    key: 'cancel',
+                    component: 'block_goalsahead'
+                }
+            ];
+
+            str.get_strings(strings).then(function (results) {
+                notification.confirm(results[0], results[1], results[2], results[3], function(){
+                    formSubmit(obj);
+                });
             });
         });
 

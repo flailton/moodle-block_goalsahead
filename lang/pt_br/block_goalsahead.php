@@ -17,6 +17,16 @@ $string['goallinked'] = 'Curso, Tópico e Atividades/Recursos vinculados';
 $string['enddateobjective'] = 'Data de encerramento do objetivo';
 
 $string['messageconfirmdelete'] = 'Deseja remover este registro?';
-$string['messageconfirmcomplete'] = 'Deseja concluir o progresso?';
 
 $string['progressheader'] = 'Acompanhamento de Progresso';
+
+$string['workload'] = 'Carga Horária';
+$string['percent'] = 'Percentual';
+
+$string['progresstype'] = 'Tipo de Progresso';
+$string['progress'] = 'Progresso';
+
+$string['confirm'] = 'Confirmação';
+$string['messageconfirmcomplete'] = 'Deseja concluir o progresso?';
+$string['continue'] = 'Continuar';
+$string['cancel'] = 'Cancelar';

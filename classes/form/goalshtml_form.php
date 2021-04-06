@@ -61,15 +61,15 @@ class goalshtml_form extends \moodleform
         $mform->disabledIf('progresstotal', 'progresstype', 'neq', 'W');
         $mform->hideIf('progresstotalarr', 'progresstype', 'neq', 'W');
 
-        $mform->addElement('header', 'goallinks', get_string('goallinks', 'block_goalsahead'));
+        // $mform->addElement('header', 'goallinks', get_string('goallinks', 'block_goalsahead'));
 
         # TODO implementar autocomplemento
-        $searcharray[] = $mform->createElement('text', 'searchcourse', get_string('course'));
-        $searcharray[] = $mform->createElement('button', 'searchbutton', '<i class="icon fa fa-search fa-fw " title="'.get_string('search').'" aria-label="'.get_string('search').'"></i>');
-        $mform->addGroup($searcharray, 'searcharr', '', array(' '), false);
+        // $searcharray[] = $mform->createElement('text', 'searchcourse', get_string('course'));
+        // $searcharray[] = $mform->createElement('button', 'searchbutton', '<i class="icon fa fa-search fa-fw " title="'.get_string('search').'" aria-label="'.get_string('search').'"></i>');
+        // $mform->addGroup($searcharray, 'searcharr', '', array(' '), false);
 
-        $mform->disabledIf('searchcourse', 'progresstype', 'neq', 'D');
-        $mform->disabledIf('searchbutton', 'progresstype', 'neq', 'D');
+        // $mform->disabledIf('searchcourse', 'progresstype', 'neq', 'D');
+        // $mform->disabledIf('searchbutton', 'progresstype', 'neq', 'D');
 
         $mform->addElement('hidden', 'id', null);
         $mform->setType('id', PARAM_INT);

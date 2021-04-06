@@ -20,7 +20,7 @@ class goalprogresshtml_form extends \moodleform {
 
         $mform->closeHeaderBefore('goalid');
 
-        $mform->addElement('text', 'progress', get_string('progress'), 'maxlength="254" size="50"');
+        $mform->addElement('text', 'progress', get_string('progress', 'block_goalsahead'), 'maxlength="254" size="50"');
         $mform->addHelpButton('progress', 'progress', 'block_goalsahead');
         $mform->addRule('progress', get_string('progressrequired', 'block_goalsahead'), 'required', null, 'client');
         $mform->addRule('progress', get_string('progressnumeric', 'block_goalsahead'), 'numeric', null, 'client');

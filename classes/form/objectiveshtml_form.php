@@ -39,18 +39,18 @@ class objectiveshtml_form extends \moodleform {
         $endDate->modify('+1 month');
         $mform->setDefault('endtime', $endDate->getTimestamp());
 
-        $mform->addElement('header','objectivelinks', get_string('objectivelinks', 'block_goalsahead'));
+        // $mform->addElement('header','objectivelinks', get_string('objectivelinks', 'block_goalsahead'));
 
-        $options = [
-            'objectives' => get_string('objectivesname', 'block_goalsahead'), 
-            'goals' => get_string('goalsname', 'block_goalsahead')
-        ];
+        // $options = [
+        //     'objectives' => get_string('objectivesname', 'block_goalsahead'), 
+        //     'goals' => get_string('goalsname', 'block_goalsahead')
+        // ];
 
-        $mform->addElement('select', 'searchtype', get_string('searchtype', 'block_goalsahead'), $options);
-        $mform->addHelpButton('searchtype', 'searchtype', 'block_goalsahead');
+        // $mform->addElement('select', 'searchtype', get_string('searchtype', 'block_goalsahead'), $options);
+        // $mform->addHelpButton('searchtype', 'searchtype', 'block_goalsahead');
 
         # TODO implementar autocomplemento
-        $mform->addElement('text', 'search', null, 'size="100"');
+        // $mform->addElement('text', 'search', null, 'size="100"');
 
         $mform->addElement('hidden', 'id', null);
         $mform->setType('id', PARAM_INT);

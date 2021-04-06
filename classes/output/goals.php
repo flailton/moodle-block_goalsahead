@@ -15,7 +15,7 @@ class goals extends controller{
     }
 
     protected function init_outputs($page) {
-        $output['form'] = array(
+        $param['form'] = array(
             "render" => "forms",
             "route" => "output\\goals",
             "call" => "goals_form"
