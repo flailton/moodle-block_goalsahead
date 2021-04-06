@@ -58,7 +58,7 @@ class dashboard extends controller
             if($goal->progresstype <> 'D'){
                 $accruedprogress = $DB->get_record_sql('
                     SELECT IFNULL(SUM(gp.progress), 0) as total
-                    FROM moodle.mdl_bga_goal_progress gp
+                    FROM mdl_bga_goal_progress gp
                     WHERE gp.goalid = :goalid ',  
                     ['goalid' => $goal->id ]
                 );
