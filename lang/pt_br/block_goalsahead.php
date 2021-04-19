@@ -11,7 +11,7 @@ $string['endtime'] = 'Data Limite';
 
 $string['objectiverequestdetails'] = 'Objetivo';
 
-$string['objectivelinks'] = 'Objetivos / Metas vinvuladas';
+$string['objectivelinks'] = 'Objetivos / Metas vinculadas';
 $string['goallinked'] = 'Curso, Tópico e Atividades/Recursos vinculados';
 
 $string['enddateobjective'] = 'Data de encerramento do objetivo';
@@ -44,3 +44,16 @@ $string['progresstyperequired'] = 'O campo Tipo de Progresso é obrigatório!';
 $string['progresstotalrequired'] = 'O campo Total, do Tipo de Progresso, é obtigatório!';
 
 $string['searchtype'] = 'Tipo de Busca';
+
+$string['noselectedobjectives'] = 'Não há Objetivos selecionados';
+$string['noselectedgoals'] = 'Não há Metas selecionadas';
+
+$string['title_help'] = 'Nome que será exibido no Painel do Moodle para identificação.';
+$string['description_help'] = 'Descrição detalhada.';
+$string['starttime_help'] = 'Data de Início para contabilização do progresso.';
+$string['endtime_help'] = 'Data Limite para encerramento da contabilização do progresso.';
+$string['searchobjectives_help'] = 'Consulta de Objetivos para vinculação.';
+$string['searchgoals_help'] = 'Consulta de Metas para vinculação.';
+$string['progresstype_help'] = 'Tipo de Progresso para acompanhamento da Meta.';
+$string['progress_help'] = 'Registro do Progresso que deseja adicionar a Meta.';
+$string['timecreated_help'] = 'Data em que o Progresso foi atingido.';

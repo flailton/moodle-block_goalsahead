@@ -36,7 +36,7 @@ class goalprogresshtml_form extends \moodleform {
         $buttonarray = array();
         $classarray = array('class' => 'form-submit');
         
-        $buttonarray[] = $mform->createElement('submit', 'saveandreturn', get_string('savechangesandreturn'), $classarray);
+        $buttonarray[] = $mform->createElement('submit', 'save', get_string('save'), $classarray);
         $buttonarray[] = $mform->createElement('cancel');
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
         $mform->closeHeaderBefore('buttonar');
