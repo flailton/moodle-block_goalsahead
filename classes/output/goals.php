@@ -5,16 +5,19 @@ namespace block_goalsahead\output;
 use block_goalsahead\controller;
 use block_goalsahead\form\goalshtml_form;
 
-class goals extends controller{
+class goals extends controller
+{
 
     private const TABLE = 'bga_goals';
 
-    public function __construct($page = 'form', $data = []) {
-        $this->default_page = 'form';        
+    public function __construct($page = 'form', $data = [])
+    {
+        $this->default_page = 'form';
         $this->init_outputs($page);
     }
 
-    protected function init_outputs($page) {
+    protected function init_outputs($page)
+    {
         $param['form'] = array(
             "render" => "forms",
             "route" => "output\\goals",
@@ -29,8 +32,9 @@ class goals extends controller{
         $page_render = (isset($param[$page]) ? $page : $this->default_page);
         $this->set_output($param[$page_render]);
     }
-    
-    public function load_data_form() {
+
+    public function load_data_form()
+    {
         return [
             'str' => [
                 'goalstitle' => get_string('goalstitle', 'block_goalsahead'),
@@ -47,7 +51,7 @@ class goals extends controller{
             ]
         ];
     }
-    
+
     public function goals_form()
     {
         $mform = new goalshtml_form();
@@ -82,7 +86,7 @@ class goals extends controller{
         $goal->starttime = $data->starttime;
         $goal->endtime = $data->endtime;
         $goal->progresstype = $data->progresstype;
-        $goal->progresstotal = ($data->progresstype === 'W'? $data->progresstotal : 100);
+        $goal->progresstotal = ($data->progresstype === 'W' ? $data->progresstotal : 100);
 
         $goal->id = $DB->insert_record(constant("self::TABLE"), $goal);
 
@@ -92,7 +96,7 @@ class goals extends controller{
     private function update($data)
     {
         global $DB;
-        
+
         $goal = $DB->get_record(constant("self::TABLE"), array('id' => $data->id));
 
         $goal->title = $data->title;
@@ -100,8 +104,8 @@ class goals extends controller{
         $goal->starttime = $data->starttime;
         $goal->endtime = $data->endtime;
         $goal->progresstype = $data->progresstype;
-        $goal->progresstotal = ($data->progresstype === 'W'? $data->progresstotal : null);
-        
+        $goal->progresstotal = ($data->progresstype === 'W' ? $data->progresstotal : null);
+
         $DB->update_record(constant("self::TABLE"), $goal);
 
         return $goal;
@@ -123,9 +127,18 @@ class goals extends controller{
 
         $timecompleted = (new \DateTime())->setTimestamp(time());
         $goal->timecompleted = $timecompleted->getTimestamp();
-        
+
         $DB->update_record(constant("self::TABLE"), $goal);
 
         return $goal;
+    }
+
+    public function get($cond = [])
+    {
+        global $DB;
+
+        $goals = $DB->get_records(constant("self::TABLE"), $cond, 'title ASC');
+
+        return $goals;
     }
 }

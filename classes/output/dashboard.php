@@ -75,7 +75,8 @@ class dashboard extends controller
             'str' => [
                 'dashboardtitle' => get_string('dashboardtitle', 'block_goalsahead'),
                 'objectives' => get_string('objectivesname', 'block_goalsahead'),
-                'goals' => get_string('goalsname', 'block_goalsahead')
+                'goals' => get_string('goalsname', 'block_goalsahead'),
+                'objectivesgoalsnotfound' => get_string('objectivesgoalsnotfound', 'block_goalsahead')
             ],
             'data' => $data
         ];

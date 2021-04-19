@@ -109,16 +109,27 @@
         <table
             class="table"
             style="width: 100%; margin: 0;">
-            <tbody>
-                {{#data}}
-                    {{#is_objective}}
-                        {{> block_goalsahead/dashboard_line_objective }}
-                    {{/is_objective}}
-                    {{#is_goal}}
-                        {{> block_goalsahead/dashboard_line_goal }}
-                    {{/is_goal}}
-                {{/data}}
-            </tbody>
+            {{#data.0}}
+                <tbody>
+                    {{#data}}
+                        {{#is_objective}}
+                            {{> block_goalsahead/dashboard_line_objective }}
+                        {{/is_objective}}
+                        {{#is_goal}}
+                            {{> block_goalsahead/dashboard_line_goal }}
+                        {{/is_goal}}
+                    {{/data}}
+                </tbody>
+            {{/data.0}}
+            {{^data.0}}
+                <tfoot>
+                    <tr>
+                        <td align="center">
+                            {{str.objectivesgoalsnotfound}}
+                        </td>
+                    </tr>
+                </tfoot>
+            {{/data.0}}
         </table>
     </div>
 </div>

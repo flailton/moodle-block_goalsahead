@@ -4,10 +4,13 @@ namespace block_goalsahead\output;
 
 use block_goalsahead\controller;
 use block_goalsahead\form\objectiveshtml_form;
+use goals;
 
 class objectives extends controller
 {
     private const TABLE = 'bga_objectives';
+    private const TABLE_OBJECTIVES_GOALS = 'bga_objectives_goals';
+    private const TABLE_OBJECTIVES_OBJECTIVES = 'bga_objectives_objectives';
 
     public function __construct($page = 'form', $data = [])
     {
@@ -70,6 +73,8 @@ class objectives extends controller
 
         $objective->id = $DB->insert_record(constant("self::TABLE"), $objective);
 
+        $this->linkdata($objective->id, $data);
+
         return $objective;
     }
 
@@ -86,6 +91,9 @@ class objectives extends controller
         
         $DB->update_record(constant("self::TABLE"), $objective);
 
+        $this->unlinkdata($data->id);
+        $this->linkdata($data->id, $data);
+
         return $objective;
     }
 
@@ -94,6 +102,8 @@ class objectives extends controller
         global $DB;
 
         $id = required_param('id', PARAM_INT);
+        $this->unlinkdata($id);
+
         return $DB->delete_records(constant("self::TABLE"), array('id' => $id));
     }
 
@@ -110,5 +120,55 @@ class objectives extends controller
         $DB->update_record(constant("self::TABLE"), $objective);
 
         return $objective;
+    }
+
+    public function get($cond = [])
+    {
+        global $DB;
+
+        $goals = $DB->get_records(constant("self::TABLE"), $cond, 'title ASC');
+
+        return $goals;
+    }
+
+    public function linkdata($id, $data)
+    {
+        global $DB;
+
+        if(!empty($data->searchgoals)){
+            $objectivesGoals = new \stdClass();
+            
+            $objectivesGoals->objectiveid = $id;
+            $timecreated = (new \DateTime())->setTimestamp(time());
+            $objectivesGoals->timecreated = $timecreated->getTimestamp();
+            $objectivesGoals->displayorder = 0;
+            
+            foreach($data->searchgoals as $searchgoal){
+                $objectivesGoals->goalid = (int) $searchgoal;
+                $DB->insert_record(constant("self::TABLE_OBJECTIVES_GOALS"), $objectivesGoals);
+            }
+        }
+        
+        if(!empty($data->searchobjectives)){
+            $objectivesObjectives = new \stdClass();
+            
+            $objectivesObjectives->mainobjectiveid = $id;
+            $timecreated = (new \DateTime())->setTimestamp(time());
+            $objectivesObjectives->timecreated = $timecreated->getTimestamp();
+            $objectivesObjectives->displayorder = 0;
+            
+            foreach($data->searchobjectives as $searchobjective){
+                $objectivesObjectives->objectiveid = (int) $searchobjective;
+                $DB->insert_record(constant("self::TABLE_OBJECTIVES_OBJECTIVES"), $objectivesObjectives);
+            }
+        }
+    }
+
+    public function unlinkdata($id)
+    {
+        global $DB;
+
+        $DB->delete_records(constant("self::TABLE_OBJECTIVES_GOALS"), array('objectiveid' => $id));
+        $DB->delete_records(constant("self::TABLE_OBJECTIVES_OBJECTIVES"), array('mainobjectiveid' => $id));
     }
 }

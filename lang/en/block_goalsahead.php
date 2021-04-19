@@ -30,3 +30,17 @@ $string['confirm'] = 'Confirm';
 $string['messageconfirmcomplete'] = 'Do you want to complete the progress?';
 $string['continue'] = 'Continue';
 $string['cancel'] = 'Cancel';
+
+$string['objectivesgoalsnotfound'] = 'There are no registered Objectives or Goals!';
+
+$string['titlerequired'] = 'The Name field is required!';
+$string['titlemaxlength'] = 'The Name field must be a maximum of 255 characters!';
+$string['titleminlength'] = 'The Name field must be at least 1 character!';
+$string['starttimerequired'] = 'The Start Date field is required!';
+$string['endtimerequired'] = 'The End Date field is required!';
+$string['endtimebeforestarttime'] = 'The Start Date cannot be greater than the End Date!';
+
+$string['progresstyperequired'] = 'The Progress Type field is required!';
+$string['progresstotalrequired'] = 'The Total field, of the Progress Type, is required!';
+
+$string['searchtype'] = 'Search Type';
