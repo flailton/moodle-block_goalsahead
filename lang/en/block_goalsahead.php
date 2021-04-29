@@ -57,3 +57,5 @@ $string['searchgoals_help'] = 'Search for Goals linked.';
 $string['progresstype_help'] = 'Progress Type for Goal Tracking.';
 $string['progress_help'] = 'Progress Record you want to add to the Goal';
 $string['timecreated_help'] = 'Date Progress was achieved.';
+
+$string['progressovercomplete'] = 'The added progress cannot exceed the total progress of the Goal.';

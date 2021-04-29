@@ -57,3 +57,5 @@ $string['searchgoals_help'] = 'Consulta de Metas para vinculação.';
 $string['progresstype_help'] = 'Tipo de Progresso para acompanhamento da Meta.';
 $string['progress_help'] = 'Registro do Progresso que deseja adicionar a Meta.';
 $string['timecreated_help'] = 'Data em que o Progresso foi atingido.';
+
+$string['progressovercomplete'] = 'O progresso adicionado não pode exceder o progresso total da Meta.';
