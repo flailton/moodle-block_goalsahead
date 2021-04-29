@@ -25,6 +25,11 @@
             <i class="fa fa-plus-circle"></i>
         </a>
         {{/has_associate_data}}
+        {{#complete}}
+            <span style="font-size: 20px; color: #00a505ab;">
+                <i class="fa fa-check"></i>
+            </span>
+        {{/complete}}
     </td>
     <td style="text-align:left">
         <div class="resource-name">
@@ -40,7 +45,7 @@
             </div>
         </div>
     </td>
-    <td style="width: 5%;">
+    <td style="width: 10%;">
         {{^complete}}
             <a href="javascript:void(0);" style="font-size: 20px; color: Gray;" class="btn-action" route="action" data-action="complete" data-page="objectives" data-id="{{id}}">
                 <i class="fa fa-check-square"></i>

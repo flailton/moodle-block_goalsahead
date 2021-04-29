@@ -152,13 +152,13 @@ class objectives extends controller
         if(!empty($data->searchobjectives)){
             $objectivesObjectives = new \stdClass();
             
-            $objectivesObjectives->mainobjectiveid = $id;
+            $objectivesObjectives->objectiveid = $id;
             $timecreated = (new \DateTime())->setTimestamp(time());
             $objectivesObjectives->timecreated = $timecreated->getTimestamp();
             $objectivesObjectives->displayorder = 0;
             
             foreach($data->searchobjectives as $searchobjective){
-                $objectivesObjectives->objectiveid = (int) $searchobjective;
+                $objectivesObjectives->subobjectiveid = (int) $searchobjective;
                 $DB->insert_record(constant("self::TABLE_OBJECTIVES_OBJECTIVES"), $objectivesObjectives);
             }
         }
@@ -169,6 +169,6 @@ class objectives extends controller
         global $DB;
 
         $DB->delete_records(constant("self::TABLE_OBJECTIVES_GOALS"), array('objectiveid' => $id));
-        $DB->delete_records(constant("self::TABLE_OBJECTIVES_OBJECTIVES"), array('mainobjectiveid' => $id));
+        $DB->delete_records(constant("self::TABLE_OBJECTIVES_OBJECTIVES"), array('objectiveid' => $id));
     }
 }

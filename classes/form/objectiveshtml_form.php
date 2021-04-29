@@ -67,7 +67,7 @@ class objectiveshtml_form extends \moodleform
             $mform->setDefault('endtime', $objective->endtime);
             $mform->setDefault('id', $objective->id);
 
-            $objectiveselected = $this->get_autocomplete_selected_data('bga_objectives_objectives', ['mainobjectiveid' => $id]);
+            $objectiveselected = $this->get_autocomplete_selected_data('bga_objectives_objectives', ['objectiveid' => $id]);
             $mform->setDefault('searchobjectives', $objectiveselected);
 
             $goalselected = $this->get_autocomplete_selected_data('bga_objectives_goals', ['objectiveid' => $id]);
@@ -132,7 +132,7 @@ class objectiveshtml_form extends \moodleform
 
         $data = $DB->get_records($table, $cond);
 
-        $column = (strpos($table, 'goal') === false? 'objectiveid' : 'goalid');
+        $column = (strpos($table, 'goal') === false? 'subobjectiveid' : 'goalid');
         foreach($data as $row){
             $arr[] = $row->$column;
         }
