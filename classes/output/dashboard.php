@@ -43,7 +43,16 @@ class dashboard extends controller
             'dashboardtitle' => get_string('dashboardtitle', 'block_goalsahead'),
             'objectives' => get_string('objectivesname', 'block_goalsahead'),
             'goals' => get_string('goalsname', 'block_goalsahead'),
-            'objectivesgoalsnotfound' => get_string('objectivesgoalsnotfound', 'block_goalsahead')
+            'objectivesgoalsnotfound' => get_string('objectivesgoalsnotfound', 'block_goalsahead'),
+            'completeobjective' => get_string('completeobjective', 'block_goalsahead'),
+            'editobjective' => get_string('editobjective', 'block_goalsahead'),
+            'deleteobjective' => get_string('deleteobjective', 'block_goalsahead'),
+            'completegoal' => get_string('completegoal', 'block_goalsahead'),
+            'editgoal' => get_string('editgoal', 'block_goalsahead'),
+            'deletegoal' => get_string('deletegoal', 'block_goalsahead'),
+            'progresstrackgoal' => get_string('progresstrackgoal', 'block_goalsahead'),
+            'newobjective' => get_string('newobjective', 'block_goalsahead'),
+            'newgoal' => get_string('newgoal', 'block_goalsahead'),
         ];
     }
 

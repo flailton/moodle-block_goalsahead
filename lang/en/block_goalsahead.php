@@ -33,6 +33,9 @@ $string['cancel'] = 'Cancel';
 
 $string['objectivesgoalsnotfound'] = 'There are no registered Objectives or Goals!';
 
+$string['title'] = 'Nome';
+$string['description'] = 'Description';
+
 $string['titlerequired'] = 'The Name field is required!';
 $string['titlemaxlength'] = 'The Name field must be a maximum of 255 characters!';
 $string['titleminlength'] = 'The Name field must be at least 1 character!';
@@ -52,10 +55,24 @@ $string['title_help'] = 'Name that will be displayed on the Moodle Dashboard for
 $string['description_help'] = 'Detailed Description.';
 $string['starttime_help'] = 'Progress count Start Date.';
 $string['endtime_help'] = 'Progress count End Date.';
+$string['searchobjectives'] = 'Search Objectives';
 $string['searchobjectives_help'] = 'Search for Objectives linked.';
+$string['searchgoals'] = 'Search Goals';
 $string['searchgoals_help'] = 'Search for Goals linked.';
 $string['progresstype_help'] = 'Progress Type for Goal Tracking.';
 $string['progress_help'] = 'Progress Record you want to add to the Goal';
+$string['timecreated'] = 'Date Progress';
 $string['timecreated_help'] = 'Date Progress was achieved.';
 
 $string['progressovercomplete'] = 'The added progress cannot exceed the total progress of the Goal.';
+
+$string['newobjective'] = 'New Objective';
+$string['completeobjective'] = 'Complete Objective';
+$string['editobjective'] = 'Edit Objective';
+$string['deleteobjective'] = 'Remove Objective';
+
+$string['newgoal'] = 'New Goal';
+$string['completegoal'] = 'Complete Goal';
+$string['editgoal'] = 'Edit Goal';
+$string['deletegoal'] = 'Remove Goal';
+$string['progresstrackgoal'] = 'Progress Tracking Goal';

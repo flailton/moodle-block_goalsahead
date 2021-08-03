@@ -38,19 +38,19 @@
     </td>
     <td style="width: 10%;">
         {{^complete}}
-            <a href="javascript:void(0);" style="font-size: 20px; color: Gray;" class="btn-action" route="action" data-action="complete" data-page="goals" data-id="{{id}}">
+            <a href="javascript:void(0);" title="{{str.completegoal}}" style="font-size: 20px; color: Gray;" class="btn-action" route="action" data-action="complete" data-page="goals" data-id="{{id}}">
                 <i class="fa fa-check-square"></i>
             </a>
         {{/complete}}
-        <a href="javascript:void(0);" style="font-size: 20px; color: Gray;" class="btn-form" route="form" data-page="goals" data-id="{{id}}">
+        <a href="javascript:void(0);" title="{{str.editgoal}}" style="font-size: 20px; color: Gray;" class="btn-form" route="form" data-page="goals" data-id="{{id}}">
             <i class="fa fa-edit"></i>
         </a>
         {{#progressenable}}
-            <a href="javascript:void(0);" style="font-size: 20px; color: Gray;" class="btn-form" route="form" data-page="goalprogress" data-goalid="{{id}}">
+            <a href="javascript:void(0);" title="{{str.progresstrackgoal}}" style="font-size: 20px; color: Gray;" class="btn-form" route="form" data-page="goalprogress" data-goalid="{{id}}">
                 <i class="fa fa-tasks"></i>
             </a>
         {{/progressenable}}
-        <a href="javascript:void(0);" style="font-size: 20px; color: Gray;" class="btn-action" route="action" data-action="delete" data-page="goals" data-id="{{id}}">
+        <a href="javascript:void(0);" title="{{str.deletegoal}}" style="font-size: 20px; color: Gray;" class="btn-action" route="action" data-action="delete" data-page="goals" data-id="{{id}}">
             <i class="fa fa-trash"></i>
         </a>
     </td>

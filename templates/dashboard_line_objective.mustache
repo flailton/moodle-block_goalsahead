@@ -47,14 +47,14 @@
     </td>
     <td style="width: 10%;">
         {{^complete}}
-            <a href="javascript:void(0);" style="font-size: 20px; color: Gray;" class="btn-action" route="action" data-action="complete" data-page="objectives" data-id="{{id}}">
+            <a href="javascript:void(0);" title="{{str.completeobjective}}" style="font-size: 20px; color: Gray;" class="btn-action" route="action" data-action="complete" data-page="objectives" data-id="{{id}}">
                 <i class="fa fa-check-square"></i>
             </a>
         {{/complete}}
-        <a href="javascript:void(0);" style="font-size: 20px; color: Gray;" class="btn-form" route="form" data-page="objectives" data-id="{{id}}">
+        <a href="javascript:void(0);" title="{{str.editobjective}}" style="font-size: 20px; color: Gray;" class="btn-form" route="form" data-page="objectives" data-id="{{id}}">
             <i class="fa fa-edit"></i>
         </a>
-        <a href="javascript:void(0);" style="font-size: 20px; color: Gray;" class="btn-action" route="action" data-action="delete" data-page="objectives" data-id="{{id}}">
+        <a href="javascript:void(0);" title="{{str.deleteobjective}}" style="font-size: 20px; color: Gray;" class="btn-action" route="action" data-action="delete" data-page="objectives" data-id="{{id}}">
             <i class="fa fa-trash"></i>
         </a>
     </td>

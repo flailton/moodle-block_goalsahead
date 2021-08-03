@@ -33,6 +33,9 @@ $string['cancel'] = 'Cancelar';
 
 $string['objectivesgoalsnotfound'] = 'Não existem Objetivos ou Metas cadastrados!';
 
+$string['title'] = 'Nome';
+$string['description'] = 'Descrição';
+
 $string['titlerequired'] = 'O campo Nome é obrigatório!';
 $string['titlemaxlength'] = 'O campo Nome deve ter, no máximo, 255 caracteres!';
 $string['titleminlength'] = 'O campo Nome deve ter, no mínimo, 1 caractere!';
@@ -52,10 +55,25 @@ $string['title_help'] = 'Nome que será exibido no Painel do Moodle para identif
 $string['description_help'] = 'Descrição detalhada.';
 $string['starttime_help'] = 'Data de Início para contabilização do progresso.';
 $string['endtime_help'] = 'Data Limite para encerramento da contabilização do progresso.';
+$string['searchobjectives'] = 'Consulta de Objetivos';
 $string['searchobjectives_help'] = 'Consulta de Objetivos para vinculação.';
+$string['searchgoals'] = 'Consulta de Metas';
 $string['searchgoals_help'] = 'Consulta de Metas para vinculação.';
 $string['progresstype_help'] = 'Tipo de Progresso para acompanhamento da Meta.';
 $string['progress_help'] = 'Registro do Progresso que deseja adicionar a Meta.';
+$string['timecreated'] = 'Data do Progresso';
 $string['timecreated_help'] = 'Data em que o Progresso foi atingido.';
 
 $string['progressovercomplete'] = 'O progresso adicionado não pode exceder o progresso total da Meta.';
+
+$string['newobjective'] = 'Novo Objetivo';
+$string['createobjective'] = 'Cadastrar Objetivo';
+$string['completeobjective'] = 'Concluir Objetivo';
+$string['editobjective'] = 'Alterar Objetivo';
+$string['deleteobjective'] = 'Remover Objetivo';
+
+$string['newgoal'] = 'Nova Meta';
+$string['completegoal'] = 'Concluir Meta';
+$string['editgoal'] = 'Alterar Meta';
+$string['deletegoal'] = 'Remover Meta';
+$string['progresstrackgoal'] = 'Acompanhar Progresso da Meta';
