@@ -65,6 +65,7 @@ $string['timecreated'] = 'Data do Progresso';
 $string['timecreated_help'] = 'Data em que o Progresso foi atingido.';
 
 $string['progressovercomplete'] = 'O progresso adicionado não pode exceder o progresso total da Meta.';
+$string['progressminlength'] = 'O progresso informado não pode ser menor do que zero.';
 
 $string['newobjective'] = 'Novo Objetivo';
 $string['createobjective'] = 'Cadastrar Objetivo';
