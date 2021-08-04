@@ -67,6 +67,7 @@ $string['timecreated_help'] = 'Date Progress was achieved.';
 $string['progressovercomplete'] = 'The added progress cannot exceed the total progress of the Goal.';
 $string['progressminlength'] = 'Progress cannot be less than zero.';
 $string['progressrequired'] = 'The Progress field is required!';
+$string['progressnumeric'] = 'Progress must be a numerical value!';
 
 $string['newobjective'] = 'New Objective';
 $string['completeobjective'] = 'Complete Objective';
