@@ -7,6 +7,7 @@ include_once("$CFG->libdir/formslib.php");
 class goalprogresshtml_form extends \moodleform {
     //Add elements to form
     public function definition() {
+        global $DB;
         $mform = $this->_form;
         
         $mform->addElement('header','progressheader', get_string('progressheader', 'block_goalsahead'));
@@ -20,11 +21,15 @@ class goalprogresshtml_form extends \moodleform {
 
         $mform->closeHeaderBefore('goalid');
 
-        $mform->addElement('text', 'progress', get_string('progress', 'block_goalsahead'), 'maxlength="254" size="50"');
-        $mform->addHelpButton('progress', 'progress', 'block_goalsahead');
-        $mform->addRule('progress', get_string('progressrequired', 'block_goalsahead'), 'required', null, 'client');
-        $mform->addRule('progress', get_string('progressnumeric', 'block_goalsahead'), 'numeric', null, 'client');
-        $mform->setType('progress', PARAM_INT);
+        $goal = $DB->get_record('bga_goals',  ['id' => $goalid ]);
+        $progressmeasure = ($goal->progresstype === 'W'? ' h' : ' %');
+        $advancementprogressarr[] = $mform->createElement('text', 'advancementprogress', get_string('advancementprogress', 'block_goalsahead'), ['class' => 'only-numeric']);
+        $advancementprogressarr[] = $mform->createElement('html', $progressmeasure);
+        $mform->addGroup($advancementprogressarr, 'advancementprogressarr', get_string('advancementprogress', 'block_goalsahead'), [' '], false);
+
+        $mform->addHelpButton('advancementprogressarr', 'advancementprogress', 'block_goalsahead');
+        $mform->addRule('advancementprogressarr', get_string('progressrequired', 'block_goalsahead'), 'required', null, 'client');
+        $mform->setType('advancementprogress', PARAM_INT);
         
         $mform->addElement('date_time_selector', 'timecreated', get_string('date'));
         $mform->addHelpButton('timecreated', 'timecreated', 'block_goalsahead');
@@ -33,12 +38,12 @@ class goalprogresshtml_form extends \moodleform {
         $mform->setDefault('timecreated', $timecreated->getTimestamp());
 
         // When two elements we need a group.
-        $buttonarray = array();
-        $classarray = array('class' => 'form-submit');
+        $buttonarray = [];
+        $classarray = ['class' => 'form-submit'];
         
         $buttonarray[] = $mform->createElement('submit', 'save', get_string('save'), $classarray);
-        $buttonarray[] = $mform->createElement('cancel');
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $buttonarray[] = $mform->createElement('cancel', 'cancel', get_string('cancelandback', 'block_goalsahead'));
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
         $mform->closeHeaderBefore('buttonar');
 
     }
@@ -48,23 +53,25 @@ class goalprogresshtml_form extends \moodleform {
         global $DB;
 
         $errors = parent::validation($data, $files);
-        if(((int) $data['progress']) <= 0){
-            $errors['progress'] = get_string('progressminlength', 'block_goalsahead');
+
+        if(!is_int($data['advancementprogress']) || $data['advancementprogress'] <= 0){
+            $errors['advancementprogressarr'] = get_string('progressnumeric', 'block_goalsahead');
+            return $errors;
         }
 
         $goal = $DB->get_record('bga_goals',  ['id' => $data['goalid'] ]);
         $accruedprogress = $DB->get_record_sql('
             SELECT IFNULL(SUM(gp.progress), 0) as total
-            FROM mdl_bga_goal_progress gp
+            FROM {bga_goal_progress} gp
             WHERE gp.goalid = :goalid ',  
             ['goalid' => $data['goalid'] ]
         );
 
         $progresstotal = ($goal->progresstype === 'W'? $goal->progresstotal : 100);
-        if(($accruedprogress->total + $data['progress']) > $progresstotal){
-            $errors['progress'] = get_string('progressovercomplete', 'block_goalsahead');
+        if(($accruedprogress->total + $data['advancementprogress']) > $progresstotal){
+            $errors['advancementprogressarr'] = get_string('progressovercomplete', 'block_goalsahead');
         }
-        
+
         return $errors;
     }
     

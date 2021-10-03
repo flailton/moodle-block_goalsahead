@@ -18,17 +18,17 @@ class goalprogress extends controller
 
     protected function init_outputs($page)
     {
-        $param['form'] = array(
+        $param['form'] = [
             "render" => "forms",
             "route" => "output\\goalprogress",
             "call" => "goalprogress_form"
-        );
+        ];
 
-        $param['action'] = array(
+        $param['action'] = [
             "render" => "action",
             "route" => "output\\goalprogress",
             "redirect" => "form"
-        );
+        ];
 
         $page_render = (isset($param[$page]) ? $page : $this->default_page);
 
@@ -75,14 +75,14 @@ class goalprogress extends controller
 
         $goalprogress->goalid = $data->goalid;
         $goalprogress->timecreated = $data->timecreated;
-        $goalprogress->progress = $data->progress;
+        $goalprogress->progress = $data->advancementprogress;
 
         $goalprogress->id = $DB->insert_record(constant("self::TABLE"), $goalprogress);
 
         $goal = $DB->get_record('bga_goals', ['id' => $data->goalid]);
         $accruedprogress = $DB->get_record_sql('
             SELECT IFNULL(SUM(gp.progress), 0) as total
-            FROM mdl_bga_goal_progress gp
+            FROM {bga_goal_progress} gp
             WHERE gp.goalid = :goalid ',  
             ['goalid' => $data->goalid ]
         );
@@ -110,6 +110,18 @@ class goalprogress extends controller
             $DB->update_record('bga_goals', $goal);
         }
 
-        return $DB->delete_records(constant("self::TABLE"), array('id' => $id));
+        return $DB->delete_records(constant("self::TABLE"), ['id' => $id]);
+    }
+
+    public function getGoalProgress($goalid)
+    {
+        global $DB;
+
+        return $DB->get_record_sql(
+            ' SELECT IFNULL(SUM(gp.progress), 0) as total
+            FROM {bga_goal_progress} gp
+            WHERE gp.goalid = :goalid ',
+            ['goalid' => $goalid]
+        );
     }
 }

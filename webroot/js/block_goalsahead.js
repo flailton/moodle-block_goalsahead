@@ -5,6 +5,10 @@ require(["jquery", "core/str", "core/notification"], function ($, str, notificat
             var classes = (objClasses.indexOf('plus') !== -1 ? objClasses.replace('plus', 'minus') : objClasses.replace('minus', 'plus'));
             $(this).find('i').attr("class", classes);
         });
+        
+        $('.only-numeric').on('keypress', function (event) {
+            return isNumber(event);
+        });
 
         $('.btn-action').on('click', function () {
             var obj = this;
@@ -59,4 +63,9 @@ require(["jquery", "core/str", "core/notification"], function ($, str, notificat
 
         $('#form_goalsahead').submit();
     }
+
+    function isNumber(evt) {
+        var iKeyCode = (evt.which) ? evt.which : evt.keyCode;
+        return (iKeyCode > 47 && iKeyCode < 58);
+    } 
 });

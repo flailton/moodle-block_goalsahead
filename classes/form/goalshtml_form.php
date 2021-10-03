@@ -43,30 +43,43 @@ class goalshtml_form extends \moodleform
         $endDate->modify('+1 month');
         $mform->setDefault('endtime', $endDate->getTimestamp());
 
-        $options = [
-            'D' => get_string('default'), 
-            'W' => get_string('workload', 'block_goalsahead'), 
-            'P' => get_string('percent', 'block_goalsahead')
+        $progressTypeOptions = [
+            'A' => get_string('automatic', 'block_goalsahead'), 
+            'M' => get_string('manual', 'block_goalsahead')
         ];
 
-        $mform->addElement('select', 'progresstype', get_string('progresstype', 'block_goalsahead'), $options);
+        $mform->addElement('select', 'progresstype', get_string('progresstype', 'block_goalsahead'), $progressTypeOptions);
         $mform->addHelpButton('progresstype', 'progresstype', 'block_goalsahead');
         $mform->addRule('progresstype', get_string('progresstyperequired', 'block_goalsahead'), 'required', null, 'client');
+
+        $progressMeasurementOptions = [
+            'P' => get_string('percent', 'block_goalsahead'),
+            'W' => get_string('workload', 'block_goalsahead')
+        ];
+
+        $mform->addElement('select', 'progressmeasurement', get_string('progressmeasurement', 'block_goalsahead'), $progressMeasurementOptions);
+        $mform->addHelpButton('progressmeasurement', 'progressmeasurement', 'block_goalsahead');
+        
+        $mform->disabledIf('progressmeasurement', 'progresstype', 'neq', 'M');
+        $mform->hideIf('progressmeasurement', 'progresstype', 'neq', 'M');
 
         $progresstotalarr[] = $mform->createElement('html', get_string('total') . ' &nbsp;');
         $progresstotalarr[] = $mform->createElement('text', 'progresstotal', '', 'size="1"');
         $progresstotalarr[] = $mform->createElement('html', ' h');
-        $mform->addGroup($progresstotalarr, 'progresstotalarr', '', array(' '), false);
+        $mform->addGroup($progresstotalarr, 'progresstotalarr', '', [' '], false);
 
-        $mform->disabledIf('progresstotal', 'progresstype', 'neq', 'W');
-        $mform->hideIf('progresstotalarr', 'progresstype', 'neq', 'W');
+        $mform->disabledIf('progresstotal', 'progresstype', 'neq', 'M');
+        $mform->hideIf('progresstotalarr', 'progresstype', 'neq', 'M');
+
+        $mform->disabledIf('progresstotal', 'progressmeasurement', 'neq', 'W');
+        $mform->hideIf('progresstotalarr', 'progressmeasurement', 'neq', 'W');
 
         // $mform->addElement('header', 'goallinks', get_string('goallinks', 'block_goalsahead'));
 
         # TODO implementar autocomplemento
         // $searcharray[] = $mform->createElement('text', 'searchcourse', get_string('course'));
         // $searcharray[] = $mform->createElement('button', 'searchbutton', '<i class="icon fa fa-search fa-fw " title="'.get_string('search').'" aria-label="'.get_string('search').'"></i>');
-        // $mform->addGroup($searcharray, 'searcharr', '', array(' '), false);
+        // $mform->addGroup($searcharray, 'searcharr', '', [' '], false);
 
         // $mform->disabledIf('searchcourse', 'progresstype', 'neq', 'D');
         // $mform->disabledIf('searchbutton', 'progresstype', 'neq', 'D');
@@ -75,23 +88,26 @@ class goalshtml_form extends \moodleform
         $mform->setType('id', PARAM_INT);
 
         $id = optional_param('id', 0, PARAM_INT);
-        if ($goal = $DB->get_record('bga_goals', array('id' => $id, 'usercreated' => $USER->id))) {
+        if ($goal = $DB->get_record('bga_goals',['id' => $id, 'usercreated' => $USER->id])) {
             $mform->setDefault('title', $goal->title);
             $mform->setDefault('description', ['text' => $goal->description, 'format' => 1]);
             $mform->setDefault('starttime', $goal->starttime);
             $mform->setDefault('endtime', $goal->endtime);
-            $mform->setDefault('progresstype', $goal->progresstype);
+            if($goal->progresstype !== 'D'){
+                $mform->setDefault('progresstype', 'M');
+            }
+            $mform->setDefault('progressmeasurement', $goal->progresstype);
             $mform->setDefault('progresstotal', $goal->progresstotal);
             $mform->setDefault('id', $goal->id);
         }
 
         // When two elements we need a group.
-        $buttonarray = array();
-        $classarray = array('class' => 'form-submit');
+        $buttonarray = [];
+        $classarray = ['class' => 'form-submit'];
 
         $buttonarray[] = $mform->createElement('submit', 'saveandreturn', get_string('savechangesandreturn'), $classarray);
-        $buttonarray[] = $mform->createElement('cancel');
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $buttonarray[] = $mform->createElement('cancel', 'cancel', get_string('cancelandback', 'block_goalsahead'));
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
         $mform->closeHeaderBefore('buttonar');
     }
 
@@ -119,8 +135,8 @@ class goalshtml_form extends \moodleform
             $errors['endtime'] = get_string('endtimebeforestarttime', 'block_goalsahead');
         }
 
-        if ($data['progresstype'] === 'W' && empty($data['progresstotal'])) {
-            $errors['progresstype'] = get_string('progresstotalrequired', 'block_goalsahead');
+        if ($data['progresstype'] === 'M' && $data['progressmeasurement'] === 'W' && empty($data['progresstotal'])) {
+            $errors['progresstotalarr'] = get_string('progresstotalrequired', 'block_goalsahead');
         }
 
         return $errors;

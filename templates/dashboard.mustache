@@ -38,23 +38,6 @@
                         'progress' => 100,
                         'complete' => true
                     ],
-                    [
-                        'id' => 8,
-                        'is_goal' => false,
-                        'is_objective' => true,
-                        'has_associate_data' => true,
-                        'title' => 'Obj 1.1',
-                        'progress' => 12,
-                        'associate_data' => [
-                            [
-                                'id' => 2,
-                                'is_goal' => true,
-                                'is_objective' => false,
-                                'title' => 'Meta 1.1.1',
-                                'progress' => 74
-                            ]
-                        ]
-                    ]
                 ]
             ],
             [
@@ -64,30 +47,6 @@
                 'title' => 'Meta 1',
                 'progress' => 20
             ],
-            [
-                'id' => 3,
-                'is_goal' => false,
-                'is_objective' => true,
-                'has_associate_data' => true,
-                'title' => 'Obj 2',
-                'progress' => 95,
-                'associate_data' => [
-                    [
-                        'id' => 6,
-                        'is_goal' => true,
-                        'is_objective' => false,
-                        'title' => 'Meta 3',
-                        'progress' => 5
-                    ]
-                ]
-            ],
-            [
-                'id' => 4,
-                'is_goal' => false,
-                'is_objective' => true,
-                'title' => 'Obj 3',
-                'progress' => 0
-            ]
         ]
     ]}
 }}
@@ -96,11 +55,11 @@
     <div style="display: inline;float: right; margin: 5px;">
         <form id="form_goalsahead" method="post">
             <input type="hidden" value="" name="goalsahead_page">
-            <a href="javascript:void(0);" title="{{str.newobjective}}" style="font-size: 20px; color: Gray;" class="btn-form" route="form" data-page="objectives">
-                <i class="fa fa-cubes"></i> {{str.objectives}}
+            <a href="javascript:void(0);" title="{{str.newobjective}}" style="font-size: 20px; color: Gray;" class="btn-form mr-3" route="form" data-page="objectives">
+                <i class="fa fa-cubes"></i> {{str.newobjective}}
             </a>
             <a href="javascript:void(0);" title="{{str.newgoal}}" style="font-size: 20px; color: Gray;" class="btn-form" route="form" data-page="goals">
-                <i class="fa fa-cube"></i> {{str.goals}}
+                <i class="fa fa-cube"></i> {{str.newgoal}}
             </a>
         </form>
     </div>
@@ -133,3 +92,14 @@
         </table>
     </div>
 </div>
+
+<style type="text/css">
+    div.text {
+        word-break: break-all;
+        overflow: visible;
+        white-space: normal;
+        width: initial; 
+        text-overflow:ellipsis;
+        height:auto;
+    }
+</style>

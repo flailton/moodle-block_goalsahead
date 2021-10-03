@@ -1,0 +1,10 @@
+span.ellipsis {
+    white-space: nowrap; 
+    width: 200px; 
+    overflow: hidden;
+    text-overflow:ellipsis;
+}
+
+span.ellipsis:hover {
+    overflow: visible;
+}

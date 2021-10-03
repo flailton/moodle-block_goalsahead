@@ -117,10 +117,4 @@ class block_goalsahead extends block_base {
     function has_config() {
         return true;
     }
-
-    public function debug($var) {
-        echo '<pre><br><br><br><br>';
-        var_dump($var);
-        echo '</pre>';
-    }
 }

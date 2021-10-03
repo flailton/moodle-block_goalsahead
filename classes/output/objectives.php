@@ -4,7 +4,6 @@ namespace block_goalsahead\output;
 
 use block_goalsahead\controller;
 use block_goalsahead\form\objectiveshtml_form;
-use goals;
 
 class objectives extends controller
 {
@@ -20,16 +19,16 @@ class objectives extends controller
 
     protected function init_outputs($page)
     {
-        $param['form'] = array(
+        $param['form'] = [
             "render" => "forms",
             "route" => "output\\objectives",
             "call" => "objectives_form"
-        );
+        ];
         
-        $param['action'] = array(
+        $param['action'] = [
             "render" => "action",
             "route" => "output\\objectives"
-        );
+        ];
         
         $page_render = (isset($param[$page]) ? $page : $this->default_page);
         $this->set_output($param[$page_render]);
@@ -82,7 +81,7 @@ class objectives extends controller
     {
         global $DB;
 
-        $objective = $DB->get_record(constant("self::TABLE"), array('id' => $data->id));
+        $objective = $DB->get_record(constant("self::TABLE"), ['id' => $data->id]);
 
         $objective->title = $data->title;
         $objective->description = $data->description['text'];
@@ -104,7 +103,7 @@ class objectives extends controller
         $id = required_param('id', PARAM_INT);
         $this->unlinkdata($id);
 
-        return $DB->delete_records(constant("self::TABLE"), array('id' => $id));
+        return $DB->delete_records(constant("self::TABLE"), ['id' => $id]);
     }
 
     public function complete()
@@ -112,7 +111,7 @@ class objectives extends controller
         global $DB;
 
         $id = required_param('id', PARAM_INT);
-        $objective = $DB->get_record(constant("self::TABLE"), array('id' => $id));
+        $objective = $DB->get_record(constant("self::TABLE"), ['id' => $id]);
 
         $timecompleted = (new \DateTime())->setTimestamp(time());
         $objective->timecompleted = $timecompleted->getTimestamp();
@@ -122,13 +121,58 @@ class objectives extends controller
         return $objective;
     }
 
+    public function unfinish()
+    {
+        global $DB;
+
+        $id = required_param('id', PARAM_INT);
+        $objective = $DB->get_record(constant("self::TABLE"), ['id' => $id]);
+
+        $objective->timecompleted = null;
+
+        $DB->update_record(constant("self::TABLE"), $objective);
+
+        return $objective;
+    }
+
     public function get($cond = [])
     {
         global $DB;
 
-        $goals = $DB->get_records(constant("self::TABLE"), $cond, 'title ASC');
+        $objectives = $DB->get_records(constant("self::TABLE"), $cond, 'title ASC');
 
-        return $goals;
+        return $objectives;
+    }
+
+    public function getData($cond, $linked = false, $checkCanLinkVerify = false)
+    {
+        global $DB;
+
+        $sql  = ' SELECT * FROM {bga_objectives} o ';
+        $sql .= ' WHERE 1 = 1 ';
+
+        foreach ($cond['main'] as $key => $item) {
+            $sql .= ' AND ' . $key . ' = :' . $key;
+            $condSql[$key] = $item;
+        }
+
+        $linked = (!empty($linked)? '' : 'NOT');
+        $subSqlCond = $checkCanLinkVerify === false ? 'oo.subobjectiveid = o.id' : 'oo.objectiveid = o.id';
+        $sql .= ' AND ' . $linked . ' EXISTS(
+            SELECT 1
+            FROM {bga_objectives_objectives} oo
+            WHERE ' . $subSqlCond;
+
+        if(!empty($cond['sub'])) {
+            foreach ($cond['sub'] as $key => $item) {
+                $sql .= ' AND ' . $key . ' = :' . $key;
+                $condSql[$key] = $item;
+            }
+        }
+        
+        $sql .= ' ) ';
+
+        return $DB->get_records_sql($sql, $condSql);
     }
 
     public function linkdata($id, $data)
@@ -159,7 +203,14 @@ class objectives extends controller
             
             foreach($data->searchobjectives as $searchobjective){
                 $objectivesObjectives->subobjectiveid = (int) $searchobjective;
-                $DB->insert_record(constant("self::TABLE_OBJECTIVES_OBJECTIVES"), $objectivesObjectives);
+                if(empty($DB->get_record(
+                    'bga_objectives_objectives', 
+                    [
+                        'objectiveid' => $objectivesObjectives->subobjectiveid
+                    ]
+                ))) {
+                    $DB->insert_record(constant("self::TABLE_OBJECTIVES_OBJECTIVES"), $objectivesObjectives);
+                }
             }
         }
     }
@@ -168,7 +219,7 @@ class objectives extends controller
     {
         global $DB;
 
-        $DB->delete_records(constant("self::TABLE_OBJECTIVES_GOALS"), array('objectiveid' => $id));
-        $DB->delete_records(constant("self::TABLE_OBJECTIVES_OBJECTIVES"), array('objectiveid' => $id));
+        $DB->delete_records(constant("self::TABLE_OBJECTIVES_GOALS"), ['objectiveid' => $id]);
+        $DB->delete_records(constant("self::TABLE_OBJECTIVES_OBJECTIVES"), ['objectiveid' => $id]);
     }
 }

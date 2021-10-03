@@ -18,16 +18,16 @@ class goals extends controller
 
     protected function init_outputs($page)
     {
-        $param['form'] = array(
+        $param['form'] = [
             "render" => "forms",
             "route" => "output\\goals",
             "call" => "goals_form"
-        );
+        ];
 
-        $param['action'] = array(
+        $param['action'] = [
             "render" => "action",
             "route" => "output\\goals"
-        );
+        ];
 
         $page_render = (isset($param[$page]) ? $page : $this->default_page);
         $this->set_output($param[$page_render]);
@@ -85,8 +85,11 @@ class goals extends controller
         $goal->usercreated = $USER->id;
         $goal->starttime = $data->starttime;
         $goal->endtime = $data->endtime;
-        $goal->progresstype = $data->progresstype;
-        $goal->progresstotal = ($data->progresstype === 'W' ? $data->progresstotal : 100);
+        $goal->progresstype = 'D';
+        if($data->progresstype === 'M'){
+            $goal->progresstype = $data->progressmeasurement;
+        }
+        $goal->progresstotal = ($data->progressmeasurement === 'W' ? $data->progresstotal : 100);
 
         $goal->id = $DB->insert_record(constant("self::TABLE"), $goal);
 
@@ -97,14 +100,17 @@ class goals extends controller
     {
         global $DB;
 
-        $goal = $DB->get_record(constant("self::TABLE"), array('id' => $data->id));
+        $goal = $DB->get_record(constant("self::TABLE"), ['id' => $data->id]);
 
         $goal->title = $data->title;
         $goal->description = $data->description['text'];
         $goal->starttime = $data->starttime;
         $goal->endtime = $data->endtime;
-        $goal->progresstype = $data->progresstype;
-        $goal->progresstotal = ($data->progresstype === 'W' ? $data->progresstotal : null);
+        $goal->progresstype = 'D';
+        if($data->progresstype === 'M'){
+            $goal->progresstype = $data->progressmeasurement;
+        }
+        $goal->progresstotal = ($data->progressmeasurement === 'W' ? $data->progresstotal : 100);
 
         $DB->update_record(constant("self::TABLE"), $goal);
 
@@ -115,7 +121,7 @@ class goals extends controller
     {
         global $DB;
         $id = required_param('id', PARAM_INT);
-        return $DB->delete_records(constant("self::TABLE"), array('id' => $id));
+        return $DB->delete_records(constant("self::TABLE"), ['id' => $id]);
     }
 
     public function complete()
@@ -123,10 +129,24 @@ class goals extends controller
         global $DB;
 
         $id = required_param('id', PARAM_INT);
-        $goal = $DB->get_record(constant("self::TABLE"), array('id' => $id));
+        $goal = $DB->get_record(constant("self::TABLE"), ['id' => $id]);
 
         $timecompleted = (new \DateTime())->setTimestamp(time());
         $goal->timecompleted = $timecompleted->getTimestamp();
+
+        $DB->update_record(constant("self::TABLE"), $goal);
+
+        return $goal;
+    }
+
+    public function unfinish()
+    {
+        global $DB;
+
+        $id = required_param('id', PARAM_INT);
+        $goal = $DB->get_record(constant("self::TABLE"), ['id' => $id]);
+
+        $goal->timecompleted = null;
 
         $DB->update_record(constant("self::TABLE"), $goal);
 
@@ -140,5 +160,33 @@ class goals extends controller
         $goals = $DB->get_records(constant("self::TABLE"), $cond, 'title ASC');
 
         return $goals;
+    }
+
+    public function getData($cond, $linked = false)
+    {
+        global $DB;
+
+        $sql  = ' SELECT * FROM {bga_goals} g ';
+        $sql .= ' WHERE 1 = 1 ';
+
+        foreach ($cond['main'] as $key => $item) {
+            $sql .= ' AND ' . $key . ' = :' . $key;
+            $condSql[$key] = $item;
+        }
+
+        $link = (!empty($linked)? '' : 'NOT');
+        $sql .= ' AND ' . $link . ' EXISTS(
+            SELECT 1
+            FROM {bga_objectives_goals} og
+            WHERE og.goalid = g.id ';
+
+        foreach ($cond['sub'] as $key => $item) {
+            $sql .= ' AND ' . $key . ' = :' . $key;
+            $condSql[$key] = $item;
+        }
+
+        $sql .= ' ) ';
+        
+        return $DB->get_records_sql($sql, $condSql);
     }
 }

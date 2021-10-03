@@ -3,11 +3,18 @@
 namespace block_goalsahead\output;
 
 use block_goalsahead\controller;
+use block_goalsahead\output\objectives;
+use block_goalsahead\output\goals;
+use block_goalsahead\output\goalprogress;
 
 class dashboard extends controller
 {
     public function __construct($page = 'dashboard', $data = [])
     {
+        $this->objectives = new objectives();
+        $this->goals = new goals();
+        $this->goalprogress = new goalprogress();
+        
         $this->default_page = 'dashboard';
 
         $this->init_outputs($page);
@@ -15,11 +22,11 @@ class dashboard extends controller
 
     public function init_outputs($page = 'dashboard')
     {
-        $output['dashboard'] = array(
+        $output['dashboard'] = [
             "render" => "template",
             "route" => "dashboard",
             "load_data" => "load_data_dashboard"
-        );
+        ];
 
         $page_render = (isset($output[$page]) ? $page : $this->default_page);
         $this->set_output($output[$page_render]);
@@ -53,6 +60,10 @@ class dashboard extends controller
             'progresstrackgoal' => get_string('progresstrackgoal', 'block_goalsahead'),
             'newobjective' => get_string('newobjective', 'block_goalsahead'),
             'newgoal' => get_string('newgoal', 'block_goalsahead'),
+            'unfinishedobjective' => get_string('unfinishedobjective', 'block_goalsahead'),
+            'unfinishedgoal' => get_string('unfinishedgoal', 'block_goalsahead'),
+            'finishedobjective' => get_string('finishedobjective', 'block_goalsahead'),
+            'finishedgoal' => get_string('finishedgoal', 'block_goalsahead'),
         ];
     }
 
@@ -63,13 +74,19 @@ class dashboard extends controller
 
         $data = [];
 
+        $timecurrent = (new \DateTime())->setTimestamp(time());
         foreach ($listObjectives as $objective) {
             $item['id'] = $objective->id;
             $item['is_goal'] = false;
             $item['is_objective'] = true;
             $item['title'] = $objective->title;
             $item['timecreated'] = $objective->timecreated;
-            $subCond['sub'] = ['objectiveid' => $item['id']];
+            $subCond['sub'] = [
+                'objectiveid' => $item['id']
+            ];
+            $subCond['fix']['sub'] = [
+                'subobjectiveid' => 'id'
+            ];
             $item['associate_data'] = $this->getDataDashboard($subCond, true);
             $countAssociateData = count($item['associate_data']);
             $item['has_associate_data'] = ($countAssociateData > 0? true : false);
@@ -77,18 +94,34 @@ class dashboard extends controller
             foreach($item['associate_data'] as $linkedData){
                 $progress += $linkedData['progress'];
             }
-
+            
             $totalProgress = 0;
             if($item['has_associate_data']){
                 $totalProgress = (int) ($progress / $countAssociateData);
             }
-            $item['progress'] = (empty($objective->timecompleted) ? $totalProgress : 100);
-            $item['complete'] = ($item['progress'] < 100 ? false : true);
-
+            $objectivetimecompleted = $objective->timecompleted;
+            if(empty($objectivetimecompleted) && $item['is_complete']){
+                //$objectivetimecompleted = $this->getLastTimecompleted(['objectiveid' => $item['id']]);
+            }
+            $item['progress'] = (!empty($objectivetimecompleted) && !$item['has_associate_data']  ? 100 : $totalProgress);
+            $item['is_complete'] = !empty($objectivetimecompleted) || $item['progress'] == 100;
+            $item['endtimeformat'] = userdate($objective->endtime, get_string('strftimedatefullshort', 'core_langconfig'));
+            $item['titleendtime'] = get_string('titleendtime', 'block_goalsahead', [
+                'type' => get_string('articleobjectivename', 'block_goalsahead'), 
+                'value' => $item['endtimeformat'], 
+                'end' => get_string('completedobjective', 'block_goalsahead')
+            ]);
+            $item['is_over_time'] = (!empty($objective->endtime) && ($timecurrent->getTimestamp() > $objective->endtime));
+            $item['timecompletedformat'] = userdate($objectivetimecompleted, get_string('strftimedatefullshort', 'core_langconfig'));
+            $item['texttimecompletedobjective'] = get_string('texttimecompletedobjective', 'block_goalsahead', $item['timecompletedformat']);
+            $item['textoverdue'] = get_string('textoverdue', 'block_goalsahead', get_string('objectivename', 'block_goalsahead'));
+            $item['is_unfinished'] = (!empty($objectivetimecompleted) && ($item['progress'] < 100));
+            
             array_push($data, $item);
         }
 
         foreach ($listGoals as $goal) {
+            $item['associate_data'] = [];
             $item['id'] = $goal->id;
             $item['is_goal'] = true;
             $item['is_objective'] = false;
@@ -98,12 +131,26 @@ class dashboard extends controller
             $item['progressenable'] = ($goal->progresstype <> 'D' ? true : false);
             $accruedprogress = 0;
             if ($goal->progresstype <> 'D') {
-                $accruedprogress = $this->getGoalProgress($goal->id);
+                $accruedprogress = $this->goalprogress->getGoalProgress($goal->id);
                 $accruedprogress = (int) (($accruedprogress->total * 100) / (!empty($goal->progresstotal) ? $goal->progresstotal : 100));
             }
-            $item['progress'] = (empty($goal->timecompleted) ? $accruedprogress : 100);
-            $item['complete'] = ($item['progress'] < 100 ? false : true);
-            $item['associate_data'] = [];
+            $goaltimecompleted = $goal->timecompleted;
+            if(empty($goaltimecompleted) && $item['is_complete']){
+                //$goaltimecompleted = $this->getLastTimecompleted(['objectiveid' => $item['id']]);
+            }
+            $item['progress'] = (!empty($goaltimecompleted) && !$item['progressenable'] ? 100 : $accruedprogress);
+            $item['is_complete'] = !empty($goaltimecompleted);
+            $item['endtimeformat'] = userdate($goal->endtime, get_string('strftimedatefullshort', 'core_langconfig'));
+            $item['titleendtime'] = get_string('titleendtime', 'block_goalsahead', [
+                'type' => get_string('articlegoalname', 'block_goalsahead'),
+                'value' => $item['endtimeformat'], 
+                'end' => get_string('completedgoal', 'block_goalsahead')
+            ]);
+            $item['is_over_time'] = (!empty($goal->endtime) && ($timecurrent->getTimestamp() > $goal->endtime));
+            $item['timecompletedformat'] = userdate($goaltimecompleted, get_string('strftimedatefullshort', 'core_langconfig'));
+            $item['texttimecompletedgoal'] = get_string('texttimecompletedgoal', 'block_goalsahead', $item['timecompletedformat']);
+            $item['textoverdue'] = get_string('textoverdue', 'block_goalsahead', get_string('goalname', 'block_goalsahead'));
+            $item['is_unfinished'] = (!empty($goaltimecompleted) && ($item['progress'] < 100));
 
             array_push($data, $item);
         }
@@ -123,84 +170,13 @@ class dashboard extends controller
         return $data;
     }
 
-    private function getUserData($cond = [], $table, $linked)
+    private function getUserData($cond = [], $table, $linked, $method = 'getData')
     {
-        $method = 'getData' . ucfirst($table);
-        if (method_exists($this, $method)) {
-            $list = $this->$method($cond, $linked);
+        $class = $this->$table;
+        if (method_exists($class, $method)) {
+            $list = $class->$method($cond, $linked);
         }
 
         return $list;
-    }
-
-    private function getGoalProgress($goalid)
-    {
-        global $DB;
-
-        return $DB->get_record_sql(
-            ' SELECT IFNULL(SUM(gp.progress), 0) as total
-            FROM mdl_bga_goal_progress gp
-            WHERE gp.goalid = :goalid ',
-            ['goalid' => $goalid]
-        );
-    }
-
-    private function getDataObjectives($cond, $linked = false)
-    {
-        global $DB;
-
-        $sql  = ' SELECT * FROM mdl_bga_objectives o ';
-        $sql .= ' WHERE 1 = 1 ';
-
-        foreach ($cond['main'] as $key => $item) {
-            $sql .= ' AND ' . $key . ' = :' . $key;
-            $condSql[$key] = $item;
-        }
-
-        $linked = (!empty($linked)? '' : 'NOT');
-        $sql .= ' AND ' . $linked . ' EXISTS(
-            SELECT 1
-            FROM mdl_bga_objectives_objectives oo
-            WHERE oo.subobjectiveid = o.id ';
-
-        foreach ($cond['sub'] as $key => $item) {
-            $sql .= ' AND ' . $key . ' = :' . $key;
-            $condSql[$key] = $item;
-        }
-
-        foreach($cond as $condition){
-
-        }
-        $sql .= ' ) ';
-
-        return $DB->get_records_sql($sql, $condSql);
-    }
-
-    private function getDataGoals($cond, $linked = false)
-    {
-        global $DB;
-
-        $sql  = ' SELECT * FROM mdl_bga_goals g ';
-        $sql .= ' WHERE 1 = 1 ';
-
-        foreach ($cond['main'] as $key => $item) {
-            $sql .= ' AND ' . $key . ' = :' . $key;
-            $condSql[$key] = $item;
-        }
-
-        $link = (!empty($linked)? '' : 'NOT');
-        $sql .= ' AND ' . $link . ' EXISTS(
-            SELECT 1
-            FROM mdl_bga_objectives_goals og
-            WHERE og.goalid = g.id ';
-
-        foreach ($cond['sub'] as $key => $item) {
-            $sql .= ' AND ' . $key . ' = :' . $key;
-            $condSql[$key] = $item;
-        }
-
-        $sql .= ' ) ';
-        
-        return $DB->get_records_sql($sql, $condSql);
     }
 }

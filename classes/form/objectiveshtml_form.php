@@ -2,6 +2,8 @@
 
 namespace block_goalsahead\form;
 
+use block_goalsahead\output\objectives;
+
 //moodleform is defined in formslib.php
 include_once("$CFG->libdir/formslib.php");
 
@@ -36,31 +38,35 @@ class objectiveshtml_form extends \moodleform
         $startDate = (new \DateTime())->setTimestamp(usergetmidnight(time()));
         $mform->setDefault('starttime', $startDate->getTimestamp());
 
-        $mform->addElement('date_time_selector', 'endtime', get_string('endtime', 'block_goalsahead'), array('optional' => true));
+        $mform->addElement('date_time_selector', 'endtime', get_string('endtime', 'block_goalsahead'), ['optional' => true]);
         $mform->addHelpButton('endtime', 'endtime', 'block_goalsahead');
         $endDate = (new \DateTime())->setTimestamp(usergetmidnight(time()));
         $endDate->modify('+1 month');
         $mform->setDefault('endtime', $endDate->getTimestamp());
 
-        $mform->addElement('header', 'objectivelinks', get_string('objectivelinks', 'block_goalsahead'));
-        
         $id = optional_param('id', 0, PARAM_INT);
         $objectivenames = $this->get_autocomplete_data('objectives', $id);
-        if (!empty($objectivenames)) {
-            $mform->addElement('autocomplete', 'searchobjectives', '', $objectivenames, $this->get_autocomplete_options('noselectedobjectives'));
-            $mform->addHelpButton('searchobjectives', 'searchobjectives', 'block_goalsahead');
-        }
-
         $goalnames = $this->get_autocomplete_data('goals');
-        if (!empty($goalnames)) {
-            $mform->addElement('autocomplete', 'searchgoals', '', $goalnames, $this->get_autocomplete_options('noselectedgoals'));
-            $mform->addHelpButton('searchgoals', 'searchgoals', 'block_goalsahead');
+
+        if(!empty($objectivenames) || !empty($goalnames)){   
+            $mform->addElement('header', 'objectivelinks', get_string('objectivelinks', 'block_goalsahead'));
+            $mform->addElement('static', 'objectiveslinkinfo', '', get_string('objectiveslinkinfo', 'block_goalsahead'));
+            
+            if (!empty($objectivenames)) {
+                $mform->addElement('autocomplete', 'searchobjectives', '', $objectivenames, $this->get_autocomplete_options('noselectedobjectives'));
+                $mform->addHelpButton('searchobjectives', 'searchobjectives', 'block_goalsahead');
+            }
+            
+            if (!empty($goalnames)) {
+                $mform->addElement('autocomplete', 'searchgoals', '', $goalnames, $this->get_autocomplete_options('noselectedgoals'));
+                $mform->addHelpButton('searchgoals', 'searchgoals', 'block_goalsahead');
+            }
         }
 
         $mform->addElement('hidden', 'id', null);
         $mform->setType('id', PARAM_INT);
 
-        if ($objective = $DB->get_record('bga_objectives', array('id' => $id, 'usercreated' => $USER->id))) {
+        if ($objective = $DB->get_record('bga_objectives', ['id' => $id, 'usercreated' => $USER->id])) {
             $mform->setDefault('title', $objective->title);
             $mform->setDefault('description', ['text' => $objective->description, 'format' => 1]);
             $mform->setDefault('starttime', $objective->starttime);
@@ -75,12 +81,12 @@ class objectiveshtml_form extends \moodleform
         }
 
         // When two elements we need a group.
-        $buttonarray = array();
-        $classarray = array('class' => 'form-submit');
+        $buttonarray = [];
+        $classarray = ['class' => 'form-submit'];
 
         $buttonarray[] = $mform->createElement('submit', 'saveandreturn', get_string('savechangesandreturn'), $classarray);
-        $buttonarray[] = $mform->createElement('cancel');
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $buttonarray[] = $mform->createElement('cancel', 'cancel', get_string('cancelandback', 'block_goalsahead'));
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
         $mform->closeHeaderBefore('buttonar');
     }
 
@@ -108,7 +114,9 @@ class objectiveshtml_form extends \moodleform
 
     public function get_autocomplete_data($classRoute = '', $id = 0)
     {
-        $arr = array();
+        global $USER;
+
+        $arr = [];
         $path = '\\block_goalsahead\\output\\';
         $classpath = (class_exists($path . $classRoute) ? $path . $classRoute : false);
         if (empty($classpath)) {
@@ -116,7 +124,9 @@ class objectiveshtml_form extends \moodleform
         }
 
         $class = new $classpath();
-        $arrdata = $class->get();
+        $arrdata = ($class instanceof objectives
+            ? $this->getDataObjectives($class, $id, ['usercreated' => $USER->id])
+            : $class->get(['usercreated' => $USER->id]));
         foreach ($arrdata as $data) {
             if($id != $data->id){
                 $arr[$data->id] = $data->title;
@@ -140,6 +150,19 @@ class objectiveshtml_form extends \moodleform
         return $arr;
     }
 
+    private function getDataObjectives($class, $id, $cond = []) 
+    {
+        global $DB;
+
+        $arr = $class->getData(['main' => $cond], false, true);
+
+        if(!empty($id) && !empty($DB->get_records('bga_objectives_objectives', ['subobjectiveid' => $id]))){
+            $arr = [];
+        }
+
+        return $arr;
+    }
+
     //Custom validation should be added here
     function validation($data, $files)
     {
@@ -148,6 +171,12 @@ class objectiveshtml_form extends \moodleform
         $errors = parent::validation($data, $files);
         if (!empty($data['endtime']) && $data['starttime'] > $data['endtime']) {
             $errors['endtime'] = get_string('endtimebeforestarttime', 'block_goalsahead');
+        }
+
+        if (!empty($data['id']) && !empty($data['searchobjectives'])) {
+            if (!empty($DB->get_records('bga_objectives_objectives', ['subobjectiveid' => $data['id']]))) {
+                $errors['searchobjectives'] = get_string('cantlinkobjectives', 'block_goalsahead');
+            }
         }
 
         return $errors;

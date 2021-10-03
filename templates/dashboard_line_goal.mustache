@@ -19,29 +19,60 @@
 }}
 
 <tr>
-    <td style="width: 5%;">
-        {{#complete}}
-            <span style="font-size: 20px; color: #00a505ab;">
-                <i class="fa fa-check"></i>
-            </span>
-        {{/complete}}
+    <td class="text-left" style="width: 5%;min-width: 70px;">
+        {{#is_complete}}
+            {{#is_unfinished}}
+                <span style="font-size: 20px; color: #e3e702;" title="{{str.unfinishedgoal}}">
+                    <i class="fa fa-exclamation-triangle"></i>
+                </span>
+            {{/is_unfinished}}
+            {{^is_unfinished}}
+                <span style="font-size: 20px; color: #00a505ab;" title="{{str.finishedgoal}}">
+                    <i class="fa fa-check"></i>
+                </span>
+            {{/is_unfinished}}
+        {{/is_complete}}
     </td>
-    <td style="text-align:left">
-        {{title}}
+    <td style="text-align:left; width: 60%;">
+        <div class="text">
+            <i class="fa fa-cube mr-2"></i>
+            {{title}}
+        </div>
+        {{^is_complete}}
+            {{#is_over_time}}
+            <div class="">
+                <small class="text-muted" title="{{titleendtime}}" style="color: Tomato !important;">
+                    <b>{{textoverdue}}</b>
+                </small>
+            </div>
+            {{/is_over_time}}
+        {{/is_complete}}
+        {{#is_complete}}
+        <div class="">
+            <small class="text-muted">
+                {{texttimecompletedgoal}}
+                {{#is_unfinished}}
+                <a href="javascript:void(0);" title="{{str.unfinishgoal}}" style="color: Tomato;" class="btn-action" route="action" data-action="unfinish" data-page="goals" data-id="{{id}}">
+                    <i class="fa fa-times-circle fa-sm"></i>
+                </a>
+                {{/is_unfinished}}
+            </small>
+        </div>
+        {{/is_complete}}
     </td>
     <td style="width: 25%;">
         <div class="progress" style="border-radius: 4px; height: 1.52rem !important; background-color: #bfbfbf !important;" title="{{progress}}%">
-            <div class="progress-bar" role="progressbar" style="width: {{progress}}%;background-color:#00a505ab !important;" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar" role="progressbar" style="width: {{progress}}%;background-color:#{{#is_unfinished}}9b9b9b{{/is_unfinished}}{{^is_unfinished}}00a505ab{{/is_unfinished}} !important;" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100">
                 {{progress}}%
             </div>
         </div>
     </td>
     <td style="width: 10%;">
-        {{^complete}}
+        {{^is_complete}}
             <a href="javascript:void(0);" title="{{str.completegoal}}" style="font-size: 20px; color: Gray;" class="btn-action" route="action" data-action="complete" data-page="goals" data-id="{{id}}">
                 <i class="fa fa-check-square"></i>
             </a>
-        {{/complete}}
+        {{/is_complete}}
         <a href="javascript:void(0);" title="{{str.editgoal}}" style="font-size: 20px; color: Gray;" class="btn-form" route="form" data-page="goals" data-id="{{id}}">
             <i class="fa fa-edit"></i>
         </a>
