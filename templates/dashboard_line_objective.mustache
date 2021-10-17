@@ -35,7 +35,7 @@
     >
         {{#is_complete}}
             {{#is_unfinished}}
-                <span style="font-size: 20px; color: #e3e702;" title="{{str.unfinishedobjective}}">
+                <span style="font-size: 20px; color: #efbb00;" title="{{str.unfinishedobjective}}">
                     <i class="fa fa-exclamation-triangle"></i>
                 </span>
             {{/is_unfinished}}
@@ -52,7 +52,7 @@
         {{/has_associate_data}}
     </td>
     <td style="text-align:left;width: 60%;">
-        <div class="text">
+        <div class="text" title="{{description}}">
             <i class="fa fa-cubes mr-2"></i>
             {{title}}
         </div>
@@ -69,9 +69,11 @@
         <div>
             <small class="text-muted">
                 {{texttimecompletedobjective}}
+                {{#timecompletedformat}}
                 <a href="javascript:void(0);" title="{{str.unfinishobjective}}" style="color: Tomato;" class="btn-action" route="action" data-action="unfinish" data-page="objectives" data-id="{{id}}">
                     <i class="fa fa-times-circle fa-sm"></i>
                 </a>
+                {{/timecompletedformat}}
             </small>
         </div>
         {{/is_complete}}

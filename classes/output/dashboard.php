@@ -64,6 +64,8 @@ class dashboard extends controller
             'unfinishedgoal' => get_string('unfinishedgoal', 'block_goalsahead'),
             'finishedobjective' => get_string('finishedobjective', 'block_goalsahead'),
             'finishedgoal' => get_string('finishedgoal', 'block_goalsahead'),
+            'unfinishgoal' => get_string('unfinishgoal', 'block_goalsahead'),
+            'unfinishobjective' => get_string('unfinishobjective', 'block_goalsahead'),
         ];
     }
 
@@ -80,6 +82,7 @@ class dashboard extends controller
             $item['is_goal'] = false;
             $item['is_objective'] = true;
             $item['title'] = $objective->title;
+            $item['description'] = strip_tags($objective->description);
             $item['timecreated'] = $objective->timecreated;
             $subCond['sub'] = [
                 'objectiveid' => $item['id']
@@ -112,12 +115,18 @@ class dashboard extends controller
                 'end' => get_string('completedobjective', 'block_goalsahead')
             ]);
             $item['is_over_time'] = (!empty($objective->endtime) && ($timecurrent->getTimestamp() > $objective->endtime));
-            $item['timecompletedformat'] = userdate($objectivetimecompleted, get_string('strftimedatefullshort', 'core_langconfig'));
-            $item['texttimecompletedobjective'] = get_string('texttimecompletedobjective', 'block_goalsahead', $item['timecompletedformat']);
+            $item['timecompletedformat'] = '';
+            $texttimecompletedformat = '';
+            if(!empty($objectivetimecompleted)){
+                $item['timecompletedformat'] = userdate($objectivetimecompleted, get_string('strftimedatefullshort', 'core_langconfig'));
+                $texttimecompletedformat = get_string('timecompletedformat', 'block_goalsahead', $item['timecompletedformat']);
+            }
+            $item['texttimecompletedobjective'] = get_string('texttimecompletedobjective', 'block_goalsahead', $texttimecompletedformat);
             $item['textoverdue'] = get_string('textoverdue', 'block_goalsahead', get_string('objectivename', 'block_goalsahead'));
             $item['is_unfinished'] = (!empty($objectivetimecompleted) && ($item['progress'] < 100));
             
             array_push($data, $item);
+            unset($item);
         }
 
         foreach ($listGoals as $goal) {
@@ -127,6 +136,7 @@ class dashboard extends controller
             $item['is_objective'] = false;
             $item['has_associate_data'] = false;
             $item['title'] = $goal->title;
+            $item['description'] = strip_tags($goal->description);
             $item['timecreated'] = $goal->timecreated;
             $item['progressenable'] = ($goal->progresstype <> 'D' ? true : false);
             $accruedprogress = 0;
@@ -147,12 +157,19 @@ class dashboard extends controller
                 'end' => get_string('completedgoal', 'block_goalsahead')
             ]);
             $item['is_over_time'] = (!empty($goal->endtime) && ($timecurrent->getTimestamp() > $goal->endtime));
-            $item['timecompletedformat'] = userdate($goaltimecompleted, get_string('strftimedatefullshort', 'core_langconfig'));
-            $item['texttimecompletedgoal'] = get_string('texttimecompletedgoal', 'block_goalsahead', $item['timecompletedformat']);
+            $item['timecompletedformat'] = '';
+            $texttimecompletedformat = '';
+            if(!empty($goaltimecompleted)){
+                $item['timecompletedformat'] = userdate($goaltimecompleted, get_string('strftimedatefullshort', 'core_langconfig'));
+                $texttimecompletedformat = get_string('timecompletedformat', 'block_goalsahead', $item['timecompletedformat']);
+            }
+            $item['texttimecompletedgoal'] = get_string('texttimecompletedgoal', 'block_goalsahead', $texttimecompletedformat);
+
             $item['textoverdue'] = get_string('textoverdue', 'block_goalsahead', get_string('goalname', 'block_goalsahead'));
             $item['is_unfinished'] = (!empty($goaltimecompleted) && ($item['progress'] < 100));
 
             array_push($data, $item);
+            unset($item);
         }
 
         usort($data, function($a, $b) {

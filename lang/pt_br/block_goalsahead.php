@@ -1,5 +1,5 @@
 <?php
-$string['pluginname'] = 'Goals Ahead';
+$string['pluginname'] = 'GoalsAhead';
 $string['objectivesname'] = 'Objetivos';
 $string['goalsname'] = 'Metas';
 $string['objectivename'] = 'Objetivo';
@@ -54,15 +54,12 @@ $string['searchtype'] = 'Tipo de Busca';
 $string['noselectedobjectives'] = 'Não há Objetivos selecionados';
 $string['noselectedgoals'] = 'Não há Metas selecionadas';
 
-$string['title_help'] = 'Nome que será exibido no Painel do Moodle para identificação.';
-$string['description_help'] = 'Descrição detalhada.';
-$string['starttime_help'] = 'Data de Início para contabilização do progresso.';
-$string['endtime_help'] = 'Data Limite para encerramento da contabilização do progresso.';
+$string['endtime_help'] = 'Caso ultrapasse a Data Limite, o usuário será informado sobre o atraso no painel.';
 $string['searchobjectives'] = 'Consulta de Objetivos';
-$string['searchobjectives_help'] = 'Consulta de Objetivos para vinculação.';
+$string['searchobjectives_help'] = 'Consulte seus Objetivos cadastrados para para vinculá-los a este Objetivo, desta forma este Objetivo irá avançar a medida que os Objetivos vinculados forem sendo concluídos.';
 $string['searchgoals'] = 'Consulta de Metas';
-$string['searchgoals_help'] = 'Consulta de Metas para vinculação.';
-$string['progresstype_help'] = 'Tipo de Progresso para gerenciamento da Meta.';
+$string['searchgoals_help'] = 'Consulte suas Metas cadastradas para para vinculá-las a este Objetivo, desta forma este Objetivo irá avançar a medida que as Metas vinculadas forem sendo concluídas.';
+$string['progresstype_help'] = 'O usuário pode gerenciar o progresso de suas Metas de duas formas.<br/><br/>Automática: Serão concluídas ao clicar no botão de <b>Concluir Meta</b> no painel.<br/><br/>Manual: Será necessário que o usuário informe seu progresso, a medida que for avançando, lhe permitindo mais controle e autonomia na evolução do progresso da Meta.';
 $string['advancementprogress_help'] = 'Registro do Progresso que deseja adicionar a Meta.';
 $string['timecreated'] = 'Data do Progresso';
 $string['timecreated_help'] = 'Data em que o Progresso foi atingido.';
@@ -100,7 +97,8 @@ $string['completedgoal'] = 'concluída';
 $string['completedobjective'] = 'concluído';
 
 $string['texttimecompletedgoal'] = 'Meta concluída em {$a}';
-$string['texttimecompletedobjective'] = 'Objetivo concluído em {$a}';
+$string['texttimecompletedobjective'] = 'Objetivo concluído {$a}';
+$string['timecompletedformat'] = 'em {$a}';
 
 $string['textoverdue'] = '{$a} em atraso';
 

@@ -22,7 +22,7 @@
     <td class="text-left" style="width: 5%;min-width: 70px;">
         {{#is_complete}}
             {{#is_unfinished}}
-                <span style="font-size: 20px; color: #e3e702;" title="{{str.unfinishedgoal}}">
+                <span style="font-size: 20px; color: #efbb00;" title="{{str.unfinishedgoal}}">
                     <i class="fa fa-exclamation-triangle"></i>
                 </span>
             {{/is_unfinished}}
@@ -34,7 +34,7 @@
         {{/is_complete}}
     </td>
     <td style="text-align:left; width: 60%;">
-        <div class="text">
+        <div class="text" title="{{description}}">
             <i class="fa fa-cube mr-2"></i>
             {{title}}
         </div>
@@ -56,6 +56,11 @@
                     <i class="fa fa-times-circle fa-sm"></i>
                 </a>
                 {{/is_unfinished}}
+                {{^is_unfinished}} {{^progressenable}}
+                <a href="javascript:void(0);" title="{{str.unfinishgoal}}" style="color: Tomato;" class="btn-action" route="action" data-action="unfinish" data-page="goals" data-id="{{id}}">
+                    <i class="fa fa-times-circle fa-sm"></i>
+                </a>
+                {{/progressenable}} {{/is_unfinished}}
             </small>
         </div>
         {{/is_complete}}

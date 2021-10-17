@@ -20,18 +20,15 @@ class goalshtml_form extends \moodleform
         $mform->addElement('header', 'goalname', get_string('goalname', 'block_goalsahead'));
 
         $mform->addElement('text', 'title', get_string('name'), 'maxlength="254" size="50"');
-        $mform->addHelpButton('title', 'title', 'block_goalsahead');
         $mform->addRule('title', get_string('titlerequired', 'block_goalsahead'), 'required', null, 'client');
         $mform->addRule('title', get_string('titlemaxlength', 'block_goalsahead'), 'maxlength', 255, 'client');
         $mform->addRule('title', get_string('titleminlength', 'block_goalsahead'), 'minlength', 1, 'client');
         $mform->setType('title', PARAM_TEXT);
 
         $mform->addElement('editor', 'description', get_string('description'), null, $this->get_description_editor_options());
-        $mform->addHelpButton('description', 'description', 'block_goalsahead');
         $mform->setType('description', PARAM_RAW);
 
         $mform->addElement('date_time_selector', 'starttime', get_string('starttime', 'block_goalsahead'));
-        $mform->addHelpButton('starttime', 'starttime', 'block_goalsahead');
         $mform->addRule('starttime', get_string('starttimerequired', 'block_goalsahead'), 'required', null, 'client');
         $startDate = (new \DateTime())->setTimestamp(usergetmidnight(time()));
         $mform->setDefault('starttime', $startDate->getTimestamp());

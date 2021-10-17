@@ -1,5 +1,5 @@
 <?php
-$string['pluginname'] = 'Goals Ahead';
+$string['pluginname'] = 'GoalsAhead';
 $string['objectivesname'] = 'Objectives';
 $string['goalsname'] = 'Goals';
 $string['objectivename'] = 'Objective';
@@ -54,15 +54,12 @@ $string['searchtype'] = 'Search Type';
 $string['noselectedobjectives'] = 'No Objectives selected';
 $string['noselectedgoals'] = 'No Goals selected';
 
-$string['title_help'] = 'Name that will be displayed on the Moodle Dashboard for identification.';
-$string['description_help'] = 'Detailed Description.';
-$string['starttime_help'] = 'Progress count Start Date.';
-$string['endtime_help'] = 'Progress count End Date.';
+$string['endtime_help'] = 'If you exceed the End Date, the user will be informed about the delay in the panel.';
 $string['searchobjectives'] = 'Search Objectives';
-$string['searchobjectives_help'] = 'Search for Objectives linked.';
+$string['searchobjectives_help'] = 'Consult your registered Objectives to link them to this Objective, this way this Objective will advance as the linked Objectives are completed.';
 $string['searchgoals'] = 'Search Goals';
-$string['searchgoals_help'] = 'Search for Goals linked.';
-$string['progresstype_help'] = 'Progress Type for Goal Management.';
+$string['searchgoals_help'] = 'Consult your registered Goals to link them to this Objective, this way this Objective will advance as the linked Goals are completed.';
+$string['progresstype_help'] = 'The user can manage the progress of their Goals in two ways.<br/><br/>Automatic: They will be completed by clicking the <b>Finish Goal</b> button on the dashboard.<br/><br/>Manual: It will be necessary for the user to inform your progress as you progress, allowing you more control and autonomy in the evolution of the Goal\'s progress.';
 $string['advancementprogress_help'] = 'Progress Record you want to add to the Goal';
 $string['timecreated'] = 'Date Progress';
 $string['timecreated_help'] = 'Date Progress was achieved.';
@@ -99,7 +96,8 @@ $string['completedgoal'] = 'completed';
 $string['completedobjective'] = 'completed';
 
 $string['texttimecompletedgoal'] = 'Goal completed in {$a}';
-$string['texttimecompletedobjective'] = 'Objective completed in {$a}';
+$string['texttimecompletedobjective'] = 'Objective completed {$a}';
+$string['timecompletedformat'] = 'in {$a}';
 
 $string['textoverdue'] = 'Overdue {$a}';
 
